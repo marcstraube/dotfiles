@@ -1,0 +1,27 @@
+# REST Client Example
+# Open this file in NeoVim and press <leader>rr on any request to run it!
+
+### Simple GET request
+GET https://api.github.com/users/github
+
+### GET with headers
+GET https://jsonplaceholder.typicode.com/posts/1
+Accept: application/json
+
+### POST request
+POST https://jsonplaceholder.typicode.com/posts
+Content-Type: application/json
+
+{
+  "title": "foo",
+  "body": "bar",
+  "userId": 1
+}
+
+### GraphQL example
+POST https://api.spacex.land/graphql/
+Content-Type: application/json
+
+{
+  "query": "{ launches(limit: 5) { mission_name } }"
+}
