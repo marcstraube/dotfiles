@@ -1,0 +1,87 @@
+# ============================================================================
+# Git Aliases
+# ============================================================================
+
+alias g='git'
+alias gs='git status -sb'
+alias gss='git status'
+
+# Add
+alias ga='git add'
+alias gaa='git add --all'
+alias gap='git add --patch'
+
+# Commit
+alias gc='git commit -v'
+alias gca='git commit -v --amend'
+alias gcm='git commit -m'
+alias gcam='git commit -am'
+alias gcs='git commit -S -m'  # Signed commit
+
+# Branch
+alias gb='git branch'
+alias gba='git branch -a'
+alias gbd='git branch -d'
+alias gbD='git branch -D'
+
+# Checkout
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gcom='git checkout main 2>/dev/null || git checkout master'
+
+# Diff
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gdc='git diff --cached'
+
+# Log
+alias gl='git log --oneline --graph --decorate'
+alias gla='git log --oneline --graph --decorate --all'
+alias gll='git log --graph --pretty=format:"%C(yellow)%h%C(reset) - %C(cyan)%an%C(reset), %C(green)%ar%C(reset) : %s"'
+
+# Push/Pull
+alias gp='git push'
+alias gpo='git push origin'
+alias gpf='git push --force-with-lease'  # Safer force push
+alias gpl='git pull'
+alias gplo='git pull origin'
+alias gplr='git pull --rebase'
+
+# Fetch
+alias gf='git fetch'
+alias gfa='git fetch --all'
+alias gfo='git fetch origin'
+
+# Stash
+alias gst='git stash'
+alias gstp='git stash pop'
+alias gstl='git stash list'
+alias gstd='git stash drop'
+
+# Remote
+alias gr='git remote'
+alias grv='git remote -v'
+alias gra='git remote add'
+
+# Rebase
+alias grb='git rebase'
+alias grbi='git rebase -i'
+alias grba='git rebase --abort'
+alias grbc='git rebase --continue'
+
+# Reset
+alias grh='git reset HEAD'
+alias grhh='git reset --hard HEAD'
+
+# Misc
+alias gclean='git clean -fd'
+alias gundo='git reset --soft HEAD~1'  # Undo last commit, keep changes
+alias gwip='git add -A && git commit -m "WIP"'  # Quick work-in-progress commit
+
+# Dotfiles alias
+alias dotfiles='/usr/bin/git --git-dir=/home/mst/Code/dotfiles/ --work-tree=/home/mst'
+alias df='dotfiles'  # Short version
+alias dfs='dotfiles status -sb'
+alias dfa='dotfiles add -f'
+alias dfc='dotfiles commit -S -m'
+alias dfp='dotfiles push'

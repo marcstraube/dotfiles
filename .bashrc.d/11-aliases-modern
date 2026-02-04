@@ -1,0 +1,62 @@
+# ============================================================================
+# Modern CLI Tool Aliases
+# Use modern replacements when available
+# ============================================================================
+
+# eza (modern ls replacement)
+if command -v eza &> /dev/null; then
+    alias ls='eza --icons --group-directories-first'
+    alias ll='eza -l --icons --group-directories-first --git'
+    alias la='eza -a --icons --group-directories-first'
+    alias lla='eza -la --icons --group-directories-first --git'
+    alias lt='eza -l --icons --sort=modified --reverse'
+    alias lS='eza -l --icons --sort=size --reverse'
+    alias tree='eza --tree --icons --level=3'
+    alias tree2='eza --tree --icons --level=2'
+fi
+
+# bat (modern cat with syntax highlighting)
+if command -v bat &> /dev/null; then
+    alias cat='bat --style=auto'
+    alias less='bat --style=plain --paging=always'
+    alias bathelp='bat --plain --language=help'
+    # Use bat for man pages
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
+# ripgrep (modern grep)
+if command -v rg &> /dev/null; then
+    alias rg='rg --smart-case --hidden --glob "!.git"'
+fi
+
+# fd (modern find)
+if command -v fd &> /dev/null; then
+    alias fd='fd --hidden --follow --exclude .git'
+fi
+
+# zoxide (smarter cd)
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init bash)"
+    alias cd='z'  # Replace cd with zoxide
+fi
+
+# dust (modern du)
+if command -v dust &> /dev/null; then
+    alias du='dust'
+fi
+
+# duf (modern df)
+if command -v duf &> /dev/null; then
+    alias df='duf'
+fi
+
+# btop (modern top)
+if command -v btop &> /dev/null; then
+    alias top='btop'
+    alias htop='btop'
+fi
+
+# procs (modern ps)
+if command -v procs &> /dev/null; then
+    alias ps='procs'
+fi

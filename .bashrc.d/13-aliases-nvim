@@ -1,0 +1,18 @@
+# ============================================================================
+# NeoVim Aliases
+# ============================================================================
+
+alias vim='nvim'
+alias vi='nvim'
+alias v='nvim'
+
+# Diff
+nvimdiff() {
+    nvim -d "$1" "$2"
+}
+alias vimdiff='nvimdiff'
+
+# Edit configs quickly
+alias nvimrc='nvim ~/.config/nvim/init.lua'
+alias bashrc='nvim ~/.bashrc'
+alias bashrcd='nvim ~/.bashrc.d/'

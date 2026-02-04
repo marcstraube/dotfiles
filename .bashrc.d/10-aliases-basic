@@ -1,0 +1,65 @@
+# ============================================================================
+# Basic Aliases
+# ============================================================================
+
+# Directory navigation
+alias cd..='cd ..'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias ~='cd ~'
+alias -- -='cd -'  # Go to previous directory
+
+# File operations with safety
+alias cp='cp --preserve=all -i'
+alias cpv='cp --preserve=all -v'
+alias cpr='cp --preserve=all -r'
+alias mv='mv -i'
+alias rm='rm -I --preserve-root'  # Prompt before deleting >3 files
+alias mkdir='mkdir -pv'
+
+# ls aliases (will be overridden by eza if available)
+alias ls='ls -h --color=auto --group-directories-first'
+alias ll='ls -l'
+alias la='ls -a'
+alias lla='ls -la'
+alias lsa='ls -lsa'
+alias lt='ls -ltr'  # Sort by modification time
+alias lS='ls -lSr'  # Sort by size
+
+# Color support
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias diff='diff --color=auto'
+alias ip='ip --color=auto'
+
+# grep with colors (but not always case-insensitive like before!)
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias hgrep='history | grep --color=always'
+
+# System info
+alias df='df -h'
+alias dft='df -Tha --total'
+alias du='du -ach | sort -h'
+alias free='free -h'
+alias ps='ps auxf'
+alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
+
+# Safety aliases
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
+
+# Misc
+alias su='su -l'
+alias sudo='sudo '  # Enable alias expansion after sudo
+alias watch='watch --color'
+alias wget='wget -c'  # Resume downloads by default
+alias path='echo -e ${PATH//:/\\n}'
+alias now='date +"%Y-%m-%d %H:%M:%S"'
+alias ports='netstat -tulanp'
+alias myip='curl -s https://api.ipify.org && echo'

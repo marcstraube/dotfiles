@@ -1,0 +1,33 @@
+# ============================================================================
+# Completion Configuration
+# ============================================================================
+
+# Bash completion
+if [ -r /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+fi
+
+# Git completion
+if [ -r /usr/share/git/completion/git-completion.bash ]; then
+    . /usr/share/git/completion/git-completion.bash
+    # Enable completion for git aliases
+    __git_complete g __git_main
+    __git_complete gco _git_checkout
+    __git_complete gb _git_branch
+    __git_complete gd _git_diff
+    __git_complete gl _git_log
+fi
+
+# Symfony autocomplete
+if command -v symfony &> /dev/null; then
+    complete -C "/usr/bin/symfony self:autocomplete" symfony
+fi
+
+# fzf key bindings and completion
+if [ -r /usr/share/fzf/key-bindings.bash ]; then
+    source /usr/share/fzf/key-bindings.bash
+fi
+
+if [ -r /usr/share/fzf/completion.bash ]; then
+    source /usr/share/fzf/completion.bash
+fi

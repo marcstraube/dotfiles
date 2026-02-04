@@ -1,0 +1,48 @@
+# ============================================================================
+# Environment Variables
+# ============================================================================
+
+# Default editors
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+export SUDO_EDITOR="$VISUAL"
+export PAGER=bat  # Use bat instead of most (better syntax highlighting)
+
+# Browser configuration
+if [ -n "${DISPLAY}" ]; then
+    export BROWSER=firefox
+else
+    export BROWSER=w3m
+fi
+
+# PATH configuration
+export PATH="$HOME/.local/bin:$PATH"
+
+# XDG Base Directory
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# GPG/SSH Agent (commented out - uncomment if needed)
+#unset SSH_AGENT_PID
+#if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+#    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+#fi
+#export GPG_TTY=$(tty)
+#gpg-connect-agent updatestartuptty /bye >/dev/null
+
+# fzf configuration
+export FZF_DEFAULT_OPTS='
+  --height=40%
+  --layout=reverse
+  --info=inline
+  --border
+  --preview-window=right:60%
+  --color=fg:#cdd6f4,bg:#1e1e2e,hl:#f38ba8
+  --color=fg+:#cdd6f4,bg+:#313244,hl+:#f38ba8
+  --color=info:#cba6f7,prompt:#cba6f7,pointer:#f5e0dc
+  --color=marker:#f5e0dc,spinner:#f5e0dc,header:#f38ba8
+'
+
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

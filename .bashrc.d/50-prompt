@@ -1,0 +1,26 @@
+# ============================================================================
+# Prompt Configuration
+# ============================================================================
+
+# Starship prompt (modern, feature-rich prompt)
+if command -v starship &> /dev/null; then
+    eval "$(starship init bash)"
+else
+    # Fallback to basic prompt if starship is not installed
+    # Install with: curl -sS https://starship.rs/install.sh | sh
+    # Or: sudo pacman -S starship
+
+    # Better basic prompt with colors and git info
+    parse_git_branch() {
+        git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+    }
+
+    # Colors
+    COLOR_RESET='\[\033[0m\]'
+    COLOR_USER='\[\033[01;32m\]'
+    COLOR_HOST='\[\033[01;34m\]'
+    COLOR_DIR='\[\033[01;36m\]'
+    COLOR_GIT='\[\033[01;33m\]'
+
+    PS1="${COLOR_USER}\u${COLOR_RESET}@${COLOR_HOST}\h${COLOR_RESET}:${COLOR_DIR}\w${COLOR_GIT}\$(parse_git_branch)${COLOR_RESET}\$ "
+fi

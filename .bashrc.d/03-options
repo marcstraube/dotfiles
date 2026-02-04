@@ -1,0 +1,28 @@
+# ============================================================================
+# Shell Options
+# ============================================================================
+
+# Window size sanity check
+shopt -s checkwinsize
+
+# Enable vi mode
+set -o vi
+
+# Better directory navigation
+shopt -s autocd          # cd by typing directory name
+shopt -s cdspell         # Autocorrect typos in path names
+shopt -s dirspell        # Autocorrect directory names during tab completion
+
+# Globbing improvements
+shopt -s nocaseglob      # Case-insensitive globbing
+shopt -s extglob         # Extended pattern matching
+shopt -s globstar        # Enable ** recursive globbing
+
+# Better completion
+bind 'set completion-ignore-case on'
+bind 'set show-all-if-ambiguous on'
+bind 'set colored-stats on'
+bind 'set visible-stats on'
+bind 'set mark-symlinked-directories on'
+bind 'set colored-completion-prefix on'
+bind 'set menu-complete-display-prefix on'

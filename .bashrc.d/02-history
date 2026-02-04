@@ -1,0 +1,23 @@
+# ============================================================================
+# History Configuration
+# ============================================================================
+
+# Don't put duplicate lines or lines starting with space in the history
+export HISTCONTROL=ignoreboth:erasedups
+
+# Add to history instead of overriding it
+shopt -s histappend
+
+# Eternal bash history
+export HISTSIZE=-1
+export HISTFILESIZE=-1
+export HISTTIMEFORMAT="[%F %T] "
+
+# Multi-line commands as one entry
+shopt -s cmdhist
+
+# Write history after every command (and reload for multi-terminal sync)
+PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
+
+# Ignore common commands in history
+export HISTIGNORE="ls:ll:la:cd:pwd:exit:date:clear:history"

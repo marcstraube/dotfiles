@@ -1,0 +1,38 @@
+# ============================================================================
+# NVM - Node Version Manager (LAZY LOADED)
+# This version only loads NVM when you actually use node/npm/nvm
+# Results in MUCH faster shell startup!
+# ============================================================================
+
+export NVM_DIR="$HOME/.nvm"
+
+# Lazy load NVM
+if [ -s "/usr/share/nvm/init-nvm.sh" ]; then
+    # Create placeholder functions
+    nvm() {
+        unset -f nvm node npm npx
+        source /usr/share/nvm/init-nvm.sh
+        nvm "$@"
+    }
+
+    node() {
+        unset -f nvm node npm npx
+        source /usr/share/nvm/init-nvm.sh
+        node "$@"
+    }
+
+    npm() {
+        unset -f nvm node npm npx
+        source /usr/share/nvm/init-nvm.sh
+        npm "$@"
+    }
+
+    npx() {
+        unset -f nvm node npm npx
+        source /usr/share/nvm/init-nvm.sh
+        npx "$@"
+    }
+fi
+
+# If you want to load NVM immediately (slower startup), uncomment this:
+# source /usr/share/nvm/init-nvm.sh
