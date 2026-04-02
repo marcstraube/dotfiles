@@ -1,0 +1,164 @@
+# ============================================================================
+# Terminal Banner
+# Only displayed for user-initiated interactive terminal sessions
+# ============================================================================
+
+# Banner command (change this to customize, set empty to disable)
+TERMINAL_BANNER_CMD="pokemon-colorscripts -r"
+
+# Mountpoints to show disk usage for (space-separated)
+TERMINAL_BANNER_DISKS="/ /home /var"
+
+# Network interfaces to exclude from banner (patterns, separated by |)
+TERMINAL_BANNER_NET_EXCLUDE="docker*|br-*|veth*|lo"
+
+# Check if parent process is a terminal emulator or login shell
+_banner_parent=$(ps -o comm= -p $PPID 2>/dev/null)
+case "$_banner_parent" in
+    kitty|alacritty|ghostty|foot|wezterm|st|urxvt|xterm|xfce4-terminal|gnome-terminal*|konsole|login|sshd)
+        _banner_show() {
+            local b='\033[1m' c='\033[36m' y='\033[33m' r='\033[0m'
+            local term_width=${COLUMNS:-$(tput cols 2>/dev/null || echo 80)}
+
+            # Capture pokemon art first (need its width for layout)
+            local pokemon=()
+            local pokemon_name=""
+            local max_visible_width=0
+            if [ -n "$TERMINAL_BANNER_CMD" ] && command -v ${TERMINAL_BANNER_CMD%% *} &> /dev/null; then
+                while IFS= read -r line; do
+                    pokemon+=("$line")
+                    # Strip ANSI codes to measure visible width
+                    local stripped
+                    stripped=$(printf '%s' "$line" | sed 's/\x1b\[[0-9;]*m//g')
+                    local len=${#stripped}
+                    (( len > max_visible_width )) && max_visible_width=$len
+                done < <(eval "$TERMINAL_BANNER_CMD")
+                # pokemon-colorscripts: first line is the name, move it below the art
+                if [[ "$TERMINAL_BANNER_CMD" == pokemon-colorscripts* ]] && [ ${#pokemon[@]} -gt 1 ]; then
+                    pokemon_name="${pokemon[0]}"
+                    pokemon=("${pokemon[@]:1}")
+                    local name_pad=$(( (max_visible_width - ${#pokemon_name}) / 2 ))
+                    (( name_pad < 0 )) && name_pad=0
+                    pokemon+=("$(printf '%*s%s' "$name_pad" '' "$pokemon_name")")
+                fi
+            fi
+
+            local pad=4
+            local pokemon_total=$(( max_visible_width + pad ))
+            local label_width=12
+            local avail_value=$(( term_width - pokemon_total - label_width ))
+            (( avail_value < 20 )) && avail_value=20
+
+            # Word-wrap helper: wraps value to fit available width
+            # Continuation lines are indented to align with value column
+            local info=()
+            _add_info() {
+                local label="$1" value="$2" color="${3:-$c}"
+                local formatted_label
+                formatted_label=$(printf "${b}${color}%-${label_width}s${r}" "$label")
+                local indent
+                indent=$(printf '%*s' "$label_width" '')
+
+                local words=($value)
+                local line="" first=true
+
+                for word in "${words[@]}"; do
+                    if [ $(( ${#line} + ${#word} + 1 )) -gt $avail_value ] && [ -n "$line" ]; then
+                        if $first; then
+                            info+=("${formatted_label}${line}")
+                            first=false
+                        else
+                            info+=("${indent}${line}")
+                        fi
+                        line="$word"
+                    else
+                        line="${line:+$line }$word"
+                    fi
+                done
+                if [ -n "$line" ]; then
+                    if $first; then
+                        info+=("${formatted_label}${line}")
+                    else
+                        info+=("${indent}${line}")
+                    fi
+                fi
+            }
+
+            # System info
+            info+=("")
+            _add_info "Host:" "$(hostname)"
+            _add_info "Kernel:" "$(uname -r)"
+            _add_info "Uptime:" "$(uptime -p | sed 's/up //')"
+            _add_info "Load:" "$(awk '{print $1, $2, $3}' /proc/loadavg)"
+            _add_info "RAM:" "$(free -h | awk 'NR==2 {printf "%s / %s", $3, $2}')"
+
+            # Disks
+            for _mp in $TERMINAL_BANNER_DISKS; do
+                local disk_info
+                disk_info=$(df -h "$_mp" 2>/dev/null | awk 'NR==2 {printf "%s / %s (%s)", $3, $2, $5}')
+                [ -n "$disk_info" ] && _add_info "Disk ${_mp}:" "$disk_info"
+            done
+
+            # Network (pre-split into words for natural wrapping)
+            local net_parts=()
+            while read -r addr iface; do
+                local excluded=false
+                for pattern in ${TERMINAL_BANNER_NET_EXCLUDE//|/ }; do
+                    # shellcheck disable=SC2254
+                    case "$iface" in $pattern) excluded=true; break ;; esac
+                done
+                $excluded || net_parts+=("${addr}·(${iface})")
+            done < <(ip -4 -o addr show scope global 2>/dev/null | awk '{print $4, $2}')
+            if [ ${#net_parts[@]} -gt 0 ]; then
+                # Replace · with space for display (keeps addr+iface together during wrapping)
+                _add_info "Network:" "${net_parts[*]//·/ }"
+            fi
+
+            # Updates (cached, refreshed at most once per hour)
+            local updates=0
+            local cache_file="${XDG_CACHE_HOME:-$HOME/.cache}/banner-updates"
+            local cache_max_age=3600
+            if [ -f "$cache_file" ]; then
+                local cache_age=$(( $(date +%s) - $(stat -c %Y "$cache_file") ))
+                if (( cache_age < cache_max_age )); then
+                    updates=$(cat "$cache_file")
+                fi
+            fi
+            if [ "$updates" -eq 0 ] && command -v checkupdates &> /dev/null; then
+                updates=$(checkupdates 2>/dev/null | wc -l)
+                echo "$updates" > "$cache_file"
+            fi
+            if [ "$updates" -gt 0 ] 2>/dev/null; then
+                _add_info "Updates:" "$updates Pakete verfügbar" "$y"
+            fi
+
+            unset -f _add_info
+
+            # Print side by side
+            local max_lines=${#pokemon[@]}
+            (( ${#info[@]} > max_lines )) && max_lines=${#info[@]}
+
+            echo ""
+            for (( i=0; i<max_lines; i++ )); do
+                if (( i < ${#pokemon[@]} )); then
+                    local stripped
+                    stripped=$(printf '%s' "${pokemon[$i]}" | sed 's/\x1b\[[0-9;]*m//g')
+                    local visible_len=${#stripped}
+                    local padding=$(( pokemon_total - visible_len ))
+                    printf '%s%*s' "${pokemon[$i]}" "$padding" ""
+                else
+                    printf '%*s' "$pokemon_total" ""
+                fi
+
+                if (( i < ${#info[@]} )); then
+                    printf '\033[0m%b' "${info[$i]}"
+                fi
+                echo ""
+            done
+            echo ""
+        }
+        _banner_show
+        unset -f _banner_show
+        ;;
+esac
+unset _banner_parent TERMINAL_BANNER_CMD TERMINAL_BANNER_DISKS TERMINAL_BANNER_NET_EXCLUDE
