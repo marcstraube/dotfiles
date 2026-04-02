@@ -28,7 +28,7 @@ $c\
 $fill\
 $cmd_duration\
 $time
- $character"""
+$character"""
 
 palette = "spectrum"
 

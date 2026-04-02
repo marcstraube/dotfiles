@@ -38,3 +38,7 @@ bleopt highlight_filename=1
 # --- Misc ---
 bleopt prompt_eol_mark=
 bleopt exec_errexit_mark=
+
+# Transient prompt — collapse previous prompts after command execution
+bleopt prompt_ps1_transient=trim
+bleopt prompt_ps1_final='$(starship module time)$(starship module character)'
