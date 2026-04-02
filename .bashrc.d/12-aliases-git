@@ -86,10 +86,114 @@ dotfiles() {
             shift
             _dotfiles_meta "$gitdir" "$@"
             ;;
+        health)
+            _dotfiles_health "$gitdir"
+            ;;
+        edit-meta)
+            shift
+            _dotfiles_edit_meta "$gitdir" "$@"
+            ;;
         *)
             /usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" "$@"
             ;;
     esac
+}
+
+# Health check for dotfiles setup
+_dotfiles_health() {
+    local gitdir="$1"
+    local ok='\033[32m✓\033[0m'
+    local fail='\033[31m✗\033[0m'
+    local bold='\033[1m'
+    local reset='\033[0m'
+
+    _health_check() {
+        if eval "$2" &>/dev/null; then
+            printf "  %b  %s\n" "$ok" "$1"
+        else
+            printf "  %b  %s\n" "$fail" "$1"
+        fi
+    }
+
+    printf "${bold}Dotfiles Health Check${reset}\n\n"
+
+    # Repo checks
+    printf "${bold}Repository${reset}\n"
+    _health_check "Bare repo exists" "[[ -d '$gitdir/objects' ]]"
+    _health_check "Repo is valid" "/usr/bin/git --git-dir='$gitdir' rev-parse --git-dir"
+    _health_check "Remote configured" "/usr/bin/git --git-dir='$gitdir' remote get-url origin"
+
+    # Dependency checks
+    printf "\n${bold}Dependencies${reset}\n"
+    local deps=(starship nvim eza bat rg fd fzf zoxide dust duf btop procs age sops)
+    for dep in "${deps[@]}"; do
+        _health_check "$dep" "command -v $dep"
+    done
+
+    # Config checks
+    printf "\n${bold}Configuration${reset}\n"
+    _health_check "Starship active" "[[ \"\$STARSHIP_SHELL\" == 'bash' ]] || command -v starship"
+    _health_check "ble.sh available" "[[ -f /usr/share/blesh/ble.sh ]]"
+
+    # Skip-worktree check
+    local skip_count
+    skip_count=$(/usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" ls-files -v 2>/dev/null | grep -c '^S ' || true)
+    _health_check "Skip-worktree set on meta files ($skip_count files)" "[[ $skip_count -gt 0 ]]"
+
+    # Uncommitted changes
+    printf "\n${bold}Status${reset}\n"
+    local dirty
+    dirty=$(/usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" status --porcelain 2>/dev/null | head -1)
+    if [[ -z "$dirty" ]]; then
+        printf "  %b  %s\n" "$ok" "Working tree clean"
+    else
+        printf "  %b  %s\n" "$fail" "Uncommitted changes"
+    fi
+
+    # Ahead/behind
+    local ab
+    ab=$(/usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" rev-list --left-right --count HEAD...@{upstream} 2>/dev/null)
+    if [[ -n "$ab" ]]; then
+        local ahead behind
+        ahead=$(echo "$ab" | cut -f1)
+        behind=$(echo "$ab" | cut -f2)
+        if [[ "$ahead" -eq 0 && "$behind" -eq 0 ]]; then
+            printf "  %b  %s\n" "$ok" "Up to date with remote"
+        else
+            [[ "$ahead" -gt 0 ]] && printf "  %b  %s\n" "$fail" "Ahead by $ahead commit(s)"
+            [[ "$behind" -gt 0 ]] && printf "  %b  %s\n" "$fail" "Behind by $behind commit(s)"
+        fi
+    else
+        printf "  %b  %s\n" "$fail" "No upstream tracking branch"
+    fi
+
+    unset -f _health_check
+}
+
+# Edit meta files and optionally commit
+_dotfiles_edit_meta() {
+    local gitdir="$1"; shift
+    local meta_files=("$gitdir/README.md" "$gitdir/install.sh" "$gitdir/.claude/CLAUDE.md")
+    local existing=()
+
+    for f in "${meta_files[@]}"; do
+        [[ -f "$f" ]] && existing+=("$f")
+    done
+
+    if [[ ${#existing[@]} -eq 0 ]]; then
+        echo "No meta files found."
+        return 1
+    fi
+
+    ${EDITOR:-nvim} "${existing[@]}"
+
+    local reply
+    read -rp "Commit changes? [y/N] " reply
+    if [[ "$reply" =~ ^[Yy]$ ]]; then
+        local msg
+        read -rp "Commit message (default: 'docs: update meta files'): " msg
+        _dotfiles_meta "$gitdir" "${msg:-docs: update meta files}"
+    fi
 }
 
 # Commit meta files (README, install.sh, CLAUDE.md) from bare-repo dir
@@ -142,3 +246,5 @@ alias dfa='dotfiles add -f'
 alias dfc='dotfiles commit -S -m'
 alias dfp='dotfiles push'
 alias dfmeta='dotfiles meta'
+alias dfhealth='dotfiles health'
+alias dfem='dotfiles edit-meta'

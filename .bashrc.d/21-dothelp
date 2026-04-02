@@ -121,8 +121,13 @@ dothelp() {
         _dothelp_section "Dotfiles"
         _dothelp_item "dotfiles <cmd>" "git for bare dotfiles repo"
         _dothelp_item "dotfiles meta [msg]" "Commit meta files (README, install.sh)"
+        _dothelp_item "dotfiles health" "Check repo, deps, config status"
+        _dothelp_item "dotfiles edit-meta" "Edit + commit meta files"
         _dothelp_item "dfs / dfa / dfc / dfp" "status / add -f / commit -S / push"
-        _dothelp_item "dfmeta [msg]" "Shortcut for dotfiles meta"
+        _dothelp_item "dfmeta / dfhealth / dfem" "Shortcuts"
+        _dothelp_section "Secrets (sops + age)"
+        _dothelp_item "secrets-edit <file>" "Edit encrypted secrets file"
+        _dothelp_item "secrets-show <file>" "Decrypt and show secrets"
     }
 
     _dothelp_search() {

@@ -16,6 +16,7 @@ if [ -r /usr/share/git/completion/git-completion.bash ]; then
     __git_complete gb _git_branch
     __git_complete gd _git_diff
     __git_complete gl _git_log
+    __git_complete dotfiles __git_main
 fi
 
 # Symfony autocomplete
@@ -23,11 +24,13 @@ if command -v symfony &> /dev/null; then
     complete -C "/usr/bin/symfony self:autocomplete" symfony
 fi
 
-# fzf key bindings and completion
-if [ -r /usr/share/fzf/key-bindings.bash ]; then
-    source /usr/share/fzf/key-bindings.bash
-fi
+# fzf key bindings and completion (skip when ble.sh is active — it handles fzf natively)
+if ! [[ ${BLE_VERSION-} ]]; then
+    if [ -r /usr/share/fzf/key-bindings.bash ]; then
+        source /usr/share/fzf/key-bindings.bash
+    fi
 
-if [ -r /usr/share/fzf/completion.bash ]; then
-    source /usr/share/fzf/completion.bash
+    if [ -r /usr/share/fzf/completion.bash ]; then
+        source /usr/share/fzf/completion.bash
+    fi
 fi
