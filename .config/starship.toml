@@ -1,120 +1,197 @@
 # ============================================================================
-# Starship Prompt Configuration
-# https://starship.rs/config/
+# Starship Prompt - Spectrum Powerline Theme
+# Catppuccin-style Powerline with Nerd Font symbols
+# All icons use TOML unicode escapes to prevent encoding loss
 # ============================================================================
 
-# Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
-
-# Timeout for commands (milliseconds)
 command_timeout = 1000
+scan_timeout = 100
 
-# Format
+# \ue0b0 = Powerline right separator
 format = """
-[╭─](bold green)$username$hostname$directory$git_branch$git_status$git_commit$git_state
-[╰─](bold green)$character"""
+[\ue0b6](fg:blue)\
+$os\
+$username\
+[\ue0c4](bg:magenta fg:blue)\
+$hostname\
+[\ue0c4](bg:cyan fg:magenta)\
+$directory\
+${custom.dir_end}\
+$git_branch\
+$git_status\
+$nodejs\
+$python\
+$php\
+$rust\
+$c\
+$fill\
+$cmd_duration\
+$time
+ $character"""
 
-# Right prompt
-right_format = """$cmd_duration$jobs$time"""
+palette = "spectrum"
 
-[character]
-success_symbol = "[➜](bold green)"
-error_symbol = "[➜](bold red)"
-vimcmd_symbol = "[←](bold green)"
+[palettes.spectrum]
+base = "#252525"
+foreground = "#e8e8e8"
+red = "#e74856"
+green = "#16c60c"
+yellow = "#f9a825"
+blue = "#3b78ff"
+magenta = "#b4009e"
+cyan = "#13a6e0"
+bright-red = "#ff6b6b"
+bright-green = "#4ec9b0"
+bright-yellow = "#ffcc00"
+bright-blue = "#5c9cff"
+bright-magenta = "#d670d6"
+bright-cyan = "#00d4ff"
+gray = "#555555"
+light-gray = "#cccccc"
+white = "#ffffff"
 
+# ============================================================================
+# OS Module - Distro logo
+# ============================================================================
+[os]
+disabled = false
+style = "bg:blue fg:base"
+format = "[ $symbol ]($style)"
+
+[os.symbols]
+Arch = "\U000f08c7"
+Linux = "\U000f033d"
+Ubuntu = "\uf31b"
+Fedora = "\uf30a"
+Debian = "\uf306"
+Macos = "\uf179"
+Windows = "\U000f0372"
+
+# ============================================================================
+# Username & Hostname
+# ============================================================================
 [username]
-format = "[$user]($style)@"
-style_user = "bold cyan"
-style_root = "bold red"
+format = "[$user ]($style)"
+style_user = "bg:blue fg:base bold"
+style_root = "bg:red fg:base bold"
 show_always = true
 
 [hostname]
-format = "[$hostname]($style) in "
-style = "bold blue"
+format = "[ $hostname ]($style)"
+style = "bg:magenta fg:base bold"
 ssh_only = false
 
+# ============================================================================
+# Directory - with XDG Nerd Font symbols
+# ============================================================================
 [directory]
-format = "[$path]($style)[$read_only]($read_only_style) "
-style = "bold cyan"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+style = "bg:cyan fg:base bold"
+read_only_style = "bg:cyan fg:red bold"
 truncation_length = 3
 truncate_to_repo = true
-truncation_symbol = ".../"
-read_only = " 󰌾"
+truncation_symbol = "…/"
+read_only = " \U000f033e"
 
 [directory.substitutions]
-"~/Code" = " "
-"~/Documents" = "󰈙 "
-"~/Downloads" = " "
-"~/.config" = " "
+# Icon only (compact):
+"Documents" = "\U000f0219"
+"Downloads" = "\uf019"
+"Music" = "\U000f075a"
+"Pictures" = "\uf03e"
+"Code" = "\U000f0c8b"
+"Videos" = "\uf008"
+".config" = "\uf013"
+# Icon + Name (readable) — uncomment to switch:
+# "Documents" = "\U000f0219 Documents"
+# "Downloads" = "\uf019 Downloads"
+# "Music" = "\U000f075a Music"
+# "Pictures" = "\uf03e Pictures"
+# "Code" = "\U000f0c8b Code"
+# "Videos" = "\uf008 Videos"
+# ".config" = "\uf013 .config"
 
+# ============================================================================
+# Git — \ue0a0 = branch icon, \ue0b0 = powerline separator
+# ============================================================================
 [git_branch]
-format = "on [$symbol$branch]($style) "
-symbol = " "
-style = "bold purple"
+format = "[\ue0c4](fg:cyan bg:green)[ \ue0a0 $branch ]($style)[\ue0b4](fg:green)"
+style = "bg:green fg:base bold"
 
 [git_status]
-format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "bold red"
-conflicted = "="
-ahead = "⇡${count}"
-behind = "⇣${count}"
-diverged = "⇕⇡${ahead_count}⇣${behind_count}"
-untracked = "?${count}"
-stashed = "$${count}"
-modified = "!${count}"
-staged = "+${count}"
-renamed = "»${count}"
-deleted = "✘${count}"
+format = "( [$all_status$ahead_behind]($style))"
+style = "bold yellow"
+conflicted = "=${count} "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = '\$${count} '
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
 
-[git_commit]
-format = '[\($hash$tag\)]($style) '
-style = "bold green"
-tag_symbol = " 🏷  "
-tag_disabled = false
-only_detached = true
+# ============================================================================
+# Language modules — \ue0b0 separators, Nerd Font dev icons
+# \ue718 = Node.js, \ue73c = Python, \ue73d = PHP, \ue61e = C
+# ============================================================================
+[nodejs]
+format = "[\ue0c4](fg:green bg:bright-green)[ \ue718 $version ]($style)[\ue0b4](fg:bright-green)"
+style = "bg:bright-green fg:base bold"
 
-[git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
+[python]
+format = "[\ue0c4](fg:green bg:bright-green)[ \ue73c $version ]($style)[\ue0b4](fg:bright-green)"
+style = "bg:bright-green fg:base bold"
+
+[php]
+format = "[\ue0c4](fg:green bg:bright-green)[ \ue73d $version ]($style)[\ue0b4](fg:bright-green)"
+style = "bg:bright-green fg:base bold"
+
+[rust]
+format = "[\ue0c4](fg:green bg:bright-green)[ 🦀 $version ]($style)[\ue0b4](fg:bright-green)"
+style = "bg:bright-green fg:base bold"
+
+[c]
+format = "[\ue0c4](fg:green bg:bright-green)[ \ue61e $version ]($style)[\ue0b4](fg:bright-green)"
+style = "bg:bright-green fg:base bold"
+
+# ============================================================================
+# Conditional closers — only one renders depending on context
+# ============================================================================
+[custom.dir_end]
+description = "Close directory when no git follows"
+when = "! git rev-parse --is-inside-work-tree 2>/dev/null"
+format = "[\ue0b4](fg:cyan)"
+shell = ["bash", "--noprofile", "--norc"]
+
+# ============================================================================
+# Right-side / utility modules
+# ============================================================================
+[fill]
+symbol = " "
 
 [cmd_duration]
-format = "took [$duration]($style) "
-style = "bold yellow"
+format = "[\uf252 $duration ](bold bright-yellow)"
 min_time = 2000
 
 [time]
-format = "[$time]($style) "
-style = "bold white"
+format = "[\uf017 $time ](bold bright-cyan)"
 disabled = false
 time_format = "%H:%M"
 
-[jobs]
-format = "[$symbol$number]($style) "
-style = "bold blue"
-symbol = "✦"
+[character]
+success_symbol = "[❯](bold bright-green)"
+error_symbol = "[❯](bold bright-red)"
+vimcmd_symbol = "[❮](bold bright-green)"
 
-# Language-specific modules
-[nodejs]
-format = "via [$symbol($version )]($style)"
-symbol = " "
+[line_break]
+disabled = false
 
-[python]
-format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
-symbol = " "
-
-[rust]
-format = "via [$symbol($version )]($style)"
-symbol = " "
-
-[php]
-format = "via [$symbol($version )]($style)"
-symbol = " "
-
-[docker_context]
-format = "via [$symbol$context]($style) "
-symbol = " "
-
-# Disable modules you don't need
+# ============================================================================
+# Disabled modules
+# ============================================================================
 [aws]
 disabled = true
 
@@ -122,4 +199,7 @@ disabled = true
 disabled = true
 
 [kubernetes]
+disabled = true
+
+[package]
 disabled = true
