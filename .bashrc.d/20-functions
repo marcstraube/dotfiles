@@ -110,7 +110,9 @@ aurclone() {
 if command -v fzf &> /dev/null; then
     fcd() {
         local dir
-        dir=$(fd --type d --hidden --follow --exclude .git | fzf --preview 'eza --tree --level=2 --icons {}') && cd "$dir" || return
+        local preview='ls --color -1'
+        command -v eza &> /dev/null && preview='eza --tree --level=2 --icons'
+        dir=$(fd --type d --hidden --follow --exclude .git | fzf --preview "$preview {}") && cd "$dir" || return
     }
 fi
 
@@ -118,7 +120,9 @@ fi
 if command -v fzf &> /dev/null; then
     fe() {
         local file
-        file=$(fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}') && nvim "$file"
+        local preview='head -50'
+        command -v bat &> /dev/null && preview='bat --color=always --style=numbers --line-range=:500'
+        file=$(fzf --preview "$preview {}") && nvim "$file"
     }
 fi
 

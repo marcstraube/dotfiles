@@ -80,7 +80,6 @@ alias gwip='git add -A && git commit -m "WIP"'  # Quick work-in-progress commit
 
 # Dotfiles alias
 alias dotfiles='/usr/bin/git --git-dir=/home/mst/Code/dotfiles/ --work-tree=/home/mst'
-alias df='dotfiles'  # Short version
 alias dfs='dotfiles status -sb'
 alias dfa='dotfiles add -f'
 alias dfc='dotfiles commit -S -m'

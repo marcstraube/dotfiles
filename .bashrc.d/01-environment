@@ -3,10 +3,16 @@
 # ============================================================================
 
 # Default editors
-export VISUAL=nvim
+if command -v nvim &> /dev/null; then
+    export VISUAL=nvim
+elif command -v vim &> /dev/null; then
+    export VISUAL=vim
+else
+    export VISUAL=vi
+fi
 export EDITOR="$VISUAL"
 export SUDO_EDITOR="$VISUAL"
-export PAGER=bat  # Use bat instead of most (better syntax highlighting)
+export PAGER=less
 
 # Browser configuration
 if [ -n "${DISPLAY}" ]; then
@@ -23,13 +29,13 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 
-# GPG/SSH Agent (commented out - uncomment if needed)
-#unset SSH_AGENT_PID
-#if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-#    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-#fi
-#export GPG_TTY=$(tty)
-#gpg-connect-agent updatestartuptty /bye >/dev/null
+# GPG/SSH Agent
+unset SSH_AGENT_PID
+if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+fi
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
 
 # fzf configuration
 export FZF_DEFAULT_OPTS='
@@ -44,5 +50,7 @@ export FZF_DEFAULT_OPTS='
   --color=marker:#f5e0dc,spinner:#f5e0dc,header:#f38ba8
 '
 
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+if command -v fd &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
