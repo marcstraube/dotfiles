@@ -1,0 +1,127 @@
+# Dotfiles
+
+Bare git repo for Arch Linux with modular bash config, Neovim (Lua), and Starship prompt.
+
+## Contents
+
+| Path | Description |
+|---|---|
+| `.bashrc.d/` | Modular bash configuration (environment, aliases, functions, completions) |
+| `.config/nvim/` | Neovim config with Lazy.nvim, LSP, Treesitter, Telescope, AI plugins |
+| `.config/starship.toml` | Starship prompt — Spectrum Powerline theme with Nerd Font icons |
+| `.gitignore` | Ignore-all strategy (only explicitly added files are tracked) |
+
+## Dependencies
+
+- **Shell:** bash
+- **Font:** [Nerd Font](https://www.nerdfonts.com/) (e.g. JetBrainsMono Nerd Font)
+- **Prompt:** [starship](https://starship.rs/)
+- **Editor:** [neovim](https://neovim.io/) >= 0.10
+- **Modern CLI tools:** eza, bat, ripgrep, fd, fzf, zoxide, dust, duf, btop, procs
+
+### Arch Linux
+
+```bash
+sudo pacman -S bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs
+```
+
+## Install
+
+### Quick install
+
+```bash
+curl -Lks https://raw.githubusercontent.com/marcstraube/dotfiles/master/install.sh | bash
+```
+
+### Manual setup
+
+```bash
+git clone --bare git@github.com:marcstraube/dotfiles.git ~/Code/dotfiles
+
+# Temporary alias for setup
+alias dotfiles='/usr/bin/git --git-dir=$HOME/Code/dotfiles/ --work-tree=$HOME'
+
+# Checkout files into $HOME (backup conflicts first if needed)
+dotfiles checkout
+
+# Hide untracked files
+dotfiles config --local status.showUntrackedFiles no
+
+# Skip meta files so they don't appear in $HOME
+dotfiles update-index --skip-worktree README.md install.sh .claude/CLAUDE.md
+```
+
+### Options
+
+```
+install.sh [--repo <url>] [--dir <path>]
+```
+
+| Flag | Default | Description |
+|---|---|---|
+| `--repo` | `git@github.com:marcstraube/dotfiles.git` | Repository URL |
+| `--dir` | `~/Code/dotfiles` | Bare repo location |
+
+The installer automatically backs up conflicting files to `~/.dotfiles-backup/`.
+
+## Usage
+
+The `dotfiles` function works like `git` but operates on your home directory:
+
+```bash
+dotfiles status -sb          # Short status
+dotfiles add -f ~/.new-file  # Add file (needs -f due to ignore-all)
+dotfiles commit -S -m "msg"  # Signed commit
+dotfiles push                # Push to remote
+```
+
+### Shortcuts
+
+| Alias | Command |
+|---|---|
+| `dfs` | `dotfiles status -sb` |
+| `dfa` | `dotfiles add -f` |
+| `dfc` | `dotfiles commit -S -m` |
+| `dfp` | `dotfiles push` |
+
+### Meta files
+
+Files like `README.md` and `install.sh` live in the bare-repo directory (`~/Code/dotfiles/`),
+not in `$HOME`. To commit them into the git history:
+
+```bash
+dotfiles meta                          # Default message
+dotfiles meta "docs: update README"    # Custom message
+dfmeta "docs: add install script"      # Shortcut
+```
+
+## Structure
+
+### Bash (`.bashrc.d/`)
+
+Sourced numerically by `~/.bashrc`. Each file handles one concern:
+
+| File | Purpose |
+|---|---|
+| `01-environment` | PATH, XDG dirs, default apps |
+| `02-history` | History size, dedup, timestamps |
+| `03-options` | Shell options (cdspell, globstar, etc.) |
+| `05-banner` | Terminal welcome banner |
+| `10-aliases-basic` | Core aliases (ls, cp, grep, etc.) |
+| `11-aliases-modern` | Modern tool replacements (eza, bat, etc.) |
+| `12-aliases-git` | Git aliases + dotfiles management |
+| `13-aliases-nvim` | Neovim aliases |
+| `20-functions` | Shell functions (extract, mkcd, etc.) |
+| `21-dothelp` | Quick reference help system |
+| `30-nvm` | Node Version Manager lazy-loading |
+| `40-completion` | Bash completions |
+| `50-prompt` | Starship prompt init |
+| `99-custom-aliases` | Machine-local overrides (not tracked) |
+
+### Neovim (`.config/nvim/`)
+
+Lua-based config with Lazy.nvim plugin manager. See `.config/nvim/README.md` for details.
+
+### Starship (`.config/starship.toml`)
+
+Spectrum Powerline theme with pixelated transitions, rounded caps, and Nerd Font XDG directory icons.
