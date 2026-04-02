@@ -1,0 +1,288 @@
+# ============================================================================
+# dothelp - Quick reference for bashrc.d configuration
+# ============================================================================
+
+dothelp() {
+    local bold='\033[1m'
+    local cyan='\033[36m'
+    local yellow='\033[33m'
+    local green='\033[32m'
+    local magenta='\033[35m'
+    local reset='\033[0m'
+
+    _dothelp_header() {
+        printf "${bold}${cyan}%s${reset}\n" "$1"
+        local line="" i
+        for (( i=0; i<${#1}; i++ )); do line+="─"; done
+        printf "${cyan}%s${reset}\n" "$line"
+    }
+
+    _dothelp_item() {
+        printf "  ${bold}${green}%-24s${reset} %s\n" "$1" "$2"
+    }
+
+    _dothelp_section() {
+        printf "\n${bold}${magenta}%s${reset}\n" "$1"
+    }
+
+    _dothelp_overview() {
+        _dothelp_header "bashrc.d Quick Reference"
+        echo ""
+        printf "  Usage: ${bold}dothelp${reset} ${yellow}<category>${reset}\n"
+        echo ""
+        _dothelp_item "nav" "Directory navigation (cd, z, fcd, mkcd, tmpd)"
+        _dothelp_item "files" "File operations (cp, mv, rm, bu, compress, extract)"
+        _dothelp_item "git" "Git aliases & dotfiles management"
+        _dothelp_item "search" "Search tools (grep, rg, fd, ff, fcd, fe)"
+        _dothelp_item "system" "System info (df, du, free, ps, ports, myip)"
+        _dothelp_item "editor" "Editor aliases (nvim, vim, vi, configs)"
+        _dothelp_item "functions" "All custom shell functions"
+        _dothelp_item "modern" "Modern CLI replacements (eza, bat, etc.)"
+        _dothelp_item "banner" "Terminal banner configuration"
+        _dothelp_item "options" "Shell options & history settings"
+        echo ""
+        printf "  Source: ${yellow}~/.bashrc.d/${reset}\n"
+    }
+
+    _dothelp_nav() {
+        _dothelp_header "Navigation"
+        _dothelp_section "Directory shortcuts"
+        _dothelp_item "cd.." "cd .."
+        _dothelp_item ".." "cd .."
+        _dothelp_item "..." "cd ../.."
+        _dothelp_item "...." "cd ../../.."
+        _dothelp_item "~" "cd ~"
+        _dothelp_item "-" "cd - (previous directory)"
+        _dothelp_section "Smart navigation"
+        _dothelp_item "z <query>" "zoxide jump (smart cd)"
+        _dothelp_item "autocd" "Type directory name to cd into it"
+        _dothelp_item "cdspell" "Autocorrect cd typos"
+        _dothelp_section "Functions"
+        _dothelp_item "mkcd <dir>" "Create directory and cd into it"
+        _dothelp_item "tmpd" "Create and cd into a temp directory"
+        _dothelp_item "fcd" "Fuzzy find directory (fzf + fd)"
+    }
+
+    _dothelp_files() {
+        _dothelp_header "File Operations"
+        _dothelp_section "Safe defaults"
+        _dothelp_item "cp" "cp --preserve=all -i"
+        _dothelp_item "cpv" "cp --preserve=all -v"
+        _dothelp_item "cpr" "cp --preserve=all -r"
+        _dothelp_item "mv" "mv -i (confirm overwrite)"
+        _dothelp_item "rm" "rm -I --preserve-root"
+        _dothelp_item "mkdir" "mkdir -pv"
+        _dothelp_section "Listing"
+        _dothelp_item "ls / ll / la / lla" "List files (various formats)"
+        _dothelp_item "lt" "List sorted by modification time"
+        _dothelp_item "lS" "List sorted by size"
+        _dothelp_item "tree / tree2" "Tree view (3 / 2 levels)"
+        _dothelp_section "Archives"
+        _dothelp_item "compress <out> <files>" "Create archive (.tar.gz, .zip, .7z, ...)"
+        _dothelp_item "extract <archive>" "Extract any common archive format"
+        _dothelp_item "bu <file>" "Quick file backup with timestamp"
+        _dothelp_section "Safety"
+        _dothelp_item "chown/chmod/chgrp" "All have --preserve-root"
+    }
+
+    _dothelp_git() {
+        _dothelp_header "Git Aliases"
+        _dothelp_section "Status & Add"
+        _dothelp_item "g" "git"
+        _dothelp_item "gs / gss" "git status -sb / git status"
+        _dothelp_item "ga / gaa / gap" "add / add --all / add --patch"
+        _dothelp_section "Commit"
+        _dothelp_item "gc / gcm / gcam" "commit -v / commit -m / commit -am"
+        _dothelp_item "gca" "commit --amend"
+        _dothelp_item "gcs" "commit -S -m (signed)"
+        _dothelp_section "Branch & Checkout"
+        _dothelp_item "gb / gba / gbd" "branch / branch -a / branch -d"
+        _dothelp_item "gco / gcb / gcom" "checkout / checkout -b / checkout main"
+        _dothelp_item "gcof" "Fuzzy checkout branch (fzf)"
+        _dothelp_section "Diff & Log"
+        _dothelp_item "gd / gds / gdc" "diff / diff --staged / diff --cached"
+        _dothelp_item "gl / gla / gll" "log (oneline/graph/all/pretty)"
+        _dothelp_section "Push / Pull / Fetch"
+        _dothelp_item "gp / gpo / gpf" "push / push origin / push --force-with-lease"
+        _dothelp_item "gpl / gplo / gplr" "pull / pull origin / pull --rebase"
+        _dothelp_item "gf / gfa / gfo" "fetch / fetch --all / fetch origin"
+        _dothelp_section "Stash"
+        _dothelp_item "gst / gstp" "stash / stash pop"
+        _dothelp_item "gstl / gstd" "stash list / stash drop"
+        _dothelp_section "Rebase & Reset"
+        _dothelp_item "grb / grbi" "rebase / rebase -i"
+        _dothelp_item "grba / grbc" "rebase --abort / --continue"
+        _dothelp_item "grh / grhh" "reset HEAD / reset --hard HEAD"
+        _dothelp_item "gundo" "reset --soft HEAD~1 (undo last commit)"
+        _dothelp_section "Misc"
+        _dothelp_item "gr / grv / gra" "remote / remote -v / remote add"
+        _dothelp_item "gclean" "git clean -fd"
+        _dothelp_item "gwip" "Quick WIP commit"
+        _dothelp_section "Dotfiles"
+        _dothelp_item "dotfiles" "git for bare dotfiles repo"
+        _dothelp_item "dfs / dfa / dfc / dfp" "status / add -f / commit -S / push"
+    }
+
+    _dothelp_search() {
+        _dothelp_header "Search"
+        _dothelp_section "Grep"
+        _dothelp_item "grep / egrep / fgrep" "With --color=auto"
+        _dothelp_item "hgrep <pattern>" "Search command history"
+        _dothelp_section "Modern tools"
+        _dothelp_item "rg <pattern>" "ripgrep (smart-case, hidden files)"
+        _dothelp_item "fd <pattern>" "fd-find (hidden, follow symlinks)"
+        _dothelp_section "Functions"
+        _dothelp_item "ff <name>" "Find files by name (case-insensitive)"
+        _dothelp_item "fd_dir <name>" "Find directories by name"
+        _dothelp_item "fcd" "Fuzzy cd into directory (fzf + fd)"
+        _dothelp_item "fe" "Fuzzy find and edit file (fzf + nvim)"
+    }
+
+    _dothelp_system() {
+        _dothelp_header "System"
+        _dothelp_section "Disk & Memory"
+        _dothelp_item "df" "Disk free (duf if available)"
+        _dothelp_item "dft" "df -Tha --total"
+        _dothelp_item "du" "Disk usage (dust if available)"
+        _dothelp_item "usage" "Disk usage of current directory"
+        _dothelp_item "free" "Memory usage (free -h)"
+        _dothelp_section "Processes"
+        _dothelp_item "ps" "Process list (procs if available)"
+        _dothelp_item "psg <name>" "Search processes by name"
+        _dothelp_item "top / htop" "btop (if available)"
+        _dothelp_section "Network"
+        _dothelp_item "ports" "Show open ports (ss -tulanp)"
+        _dothelp_item "myip" "Show public IP address"
+        _dothelp_item "ip" "ip with --color=auto"
+        _dothelp_section "Misc"
+        _dothelp_item "now" "Current date/time (YYYY-MM-DD HH:MM:SS)"
+        _dothelp_item "path" "Show PATH entries (one per line)"
+        _dothelp_item "wget" "wget -c (resume by default)"
+        _dothelp_item "watch" "watch --color"
+    }
+
+    _dothelp_editor() {
+        _dothelp_header "Editor"
+        _dothelp_section "Aliases (require nvim)"
+        _dothelp_item "vim / vi / v" "All point to nvim"
+        _dothelp_item "vimdiff" "nvim -d"
+        _dothelp_section "Quick config editing"
+        _dothelp_item "nvimrc" "Edit ~/.config/nvim/init.lua"
+        _dothelp_item "bashrc" "Edit ~/.bashrc"
+        _dothelp_item "bashrcd" "Edit ~/.bashrc.d/"
+        _dothelp_section "Environment"
+        _dothelp_item "EDITOR / VISUAL" "nvim > vim > vi"
+        _dothelp_item "PAGER" "less (bat for man pages)"
+    }
+
+    _dothelp_functions() {
+        _dothelp_header "Functions"
+        _dothelp_item "mkcd <dir>" "Create directory and cd into it"
+        _dothelp_item "tmpd" "Create and cd into temp directory"
+        _dothelp_item "bu <file>" "Quick backup with timestamp"
+        _dothelp_item "compress <out> <f..>" "Create archive"
+        _dothelp_item "extract <archive>" "Extract any archive"
+        _dothelp_item "ff <name>" "Find files by name"
+        _dothelp_item "fd_dir <name>" "Find directories by name"
+        _dothelp_item "usage" "Disk usage of current dir"
+        _dothelp_item "fcd" "Fuzzy cd (fzf + fd)"
+        _dothelp_item "fe" "Fuzzy find & edit (fzf + nvim)"
+        _dothelp_item "gcof" "Fuzzy git checkout (fzf)"
+        _dothelp_item "note [text]" "Quick note (opens nvim or appends)"
+        _dothelp_item "mkalias <n> \"<cmd>\"" "Create persistent alias"
+        _dothelp_item "rmalias <name>" "Remove persistent alias"
+        _dothelp_item "aurclone <pkg>" "Clone AUR package"
+        _dothelp_item "dothelp [cat]" "This help"
+    }
+
+    _dothelp_modern() {
+        local check='\033[32m✓\033[0m' cross='\033[31m✗\033[0m'
+        _dothelp_status() {
+            local status
+            if command -v "$1" &> /dev/null; then status="$check"; else status="$cross"; fi
+            printf "  %b ${bold}${green}%-16s${reset} %-14s %s\n" "$status" "$2" "$3" "$4"
+        }
+        _dothelp_header "Modern CLI Replacements"
+        echo ""
+        printf "     ${yellow}%-16s %-14s %s${reset}\n" "TOOL" "REPLACES" "PACKAGE"
+        printf "     %-16s %-14s %s\n" "────────────────" "──────────────" "───────"
+        _dothelp_status eza    "eza"          "ls, tree"     "(eza)"
+        _dothelp_status bat    "bat"          "cat, less"    "(bat)"
+        _dothelp_status rg     "ripgrep (rg)" "grep"         "(ripgrep)"
+        _dothelp_status fd     "fd"           "find"         "(fd)"
+        _dothelp_status zoxide "zoxide (z)"   "cd"           "(zoxide)"
+        _dothelp_status dust   "dust"         "du"           "(dust)"
+        _dothelp_status duf    "duf"          "df"           "(duf)"
+        _dothelp_status btop   "btop"         "top, htop"    "(btop)"
+        _dothelp_status procs  "procs"        "ps"           "(procs)"
+        _dothelp_status fzf    "fzf"          "fuzzy finder" "(fzf)"
+        unset -f _dothelp_status
+    }
+
+    _dothelp_banner() {
+        _dothelp_header "Banner Configuration"
+        _dothelp_section "Variables (set before sourcing 05-banner)"
+        _dothelp_item "..._BANNER_CMD" "Command to run (default: pokemon-colorscripts -r)"
+        _dothelp_item "..._BANNER_DISKS" "Mountpoints to show (default: / /home /var)"
+        _dothelp_item "..._BANNER_NET_EXCLUDE" "Network interfaces to hide"
+        _dothelp_section "Info displayed"
+        _dothelp_item "Host / Kernel" "Hostname and kernel version"
+        _dothelp_item "Uptime / Load" "System uptime and load average"
+        _dothelp_item "RAM / Disk" "Memory and disk usage"
+        _dothelp_item "Network" "IP addresses per interface"
+        _dothelp_item "Updates" "Available package updates (cached)"
+    }
+
+    _dothelp_options() {
+        _dothelp_header "Shell Options & History"
+        _dothelp_section "Shell options (03-options)"
+        _dothelp_item "vi mode" "set -o vi"
+        _dothelp_item "autocd" "cd by typing directory name"
+        _dothelp_item "cdspell / dirspell" "Autocorrect typos"
+        _dothelp_item "nocaseglob" "Case-insensitive globbing"
+        _dothelp_item "extglob" "Extended pattern matching"
+        _dothelp_item "globstar" "Enable ** recursive globbing"
+        _dothelp_section "Completion (readline)"
+        _dothelp_item "completion-ignore-case" "Case-insensitive tab completion"
+        _dothelp_item "show-all-if-ambiguous" "Show matches immediately"
+        _dothelp_item "colored-stats" "Color-coded file type indicators"
+        _dothelp_section "History (02-history)"
+        _dothelp_item "HISTSIZE" "Unlimited (-1)"
+        _dothelp_item "HISTCONTROL" "ignoreboth:erasedups"
+        _dothelp_item "HISTTIMEFORMAT" "[YYYY-MM-DD HH:MM:SS]"
+        _dothelp_item "HISTIGNORE" "ls, ll, la, cd, pwd, exit, date, clear"
+        _dothelp_item "histappend" "Append, don't overwrite"
+        _dothelp_item "cmdhist" "Multi-line as single entry"
+    }
+
+    local output
+    case "${1:-}" in
+        nav)        output=$(_dothelp_nav) ;;
+        files)      output=$(_dothelp_files) ;;
+        git)        output=$(_dothelp_git) ;;
+        search)     output=$(_dothelp_search) ;;
+        system)     output=$(_dothelp_system) ;;
+        editor)     output=$(_dothelp_editor) ;;
+        functions)  output=$(_dothelp_functions) ;;
+        modern)     output=$(_dothelp_modern) ;;
+        banner)     output=$(_dothelp_banner) ;;
+        options)    output=$(_dothelp_options) ;;
+        "")         output=$(_dothelp_overview) ;;
+        *)
+            printf "Unknown category: ${bold}%s${reset}\n" "$1"
+            printf "Run ${bold}dothelp${reset} for available categories.\n"
+            unset -f _dothelp_header _dothelp_item _dothelp_section _dothelp_overview \
+                     _dothelp_nav _dothelp_files _dothelp_git _dothelp_search \
+                     _dothelp_system _dothelp_editor _dothelp_functions _dothelp_modern \
+                     _dothelp_banner _dothelp_options
+            return 1
+            ;;
+    esac
+
+    unset -f _dothelp_header _dothelp_item _dothelp_section _dothelp_overview \
+             _dothelp_nav _dothelp_files _dothelp_git _dothelp_search \
+             _dothelp_system _dothelp_editor _dothelp_functions _dothelp_modern \
+             _dothelp_banner _dothelp_options
+
+    echo -e "$output"
+}
