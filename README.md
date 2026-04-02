@@ -9,6 +9,7 @@ Bare git repo for Arch Linux with modular bash config, Neovim (Lua), and Starshi
 | `.bashrc.d/` | Modular bash configuration (environment, aliases, functions, completions) |
 | `.config/nvim/` | Neovim config with Lazy.nvim, LSP, Treesitter, Telescope, AI plugins |
 | `.config/starship.toml` | Starship prompt — Spectrum Powerline theme with Nerd Font icons |
+| `.config/blesh/init.sh` | ble.sh config — syntax highlighting, autosuggestions, Catppuccin faces |
 | `.gitignore` | Ignore-all strategy (only explicitly added files are tracked) |
 
 ## Dependencies
@@ -17,12 +18,15 @@ Bare git repo for Arch Linux with modular bash config, Neovim (Lua), and Starshi
 - **Font:** [Nerd Font](https://www.nerdfonts.com/) (e.g. JetBrainsMono Nerd Font)
 - **Prompt:** [starship](https://starship.rs/)
 - **Editor:** [neovim](https://neovim.io/) >= 0.10
+- **Line editor:** [ble.sh](https://github.com/akinomyoga/ble.sh) >= 0.4 (syntax highlighting, autosuggestions)
 - **Modern CLI tools:** eza, bat, ripgrep, fd, fzf, zoxide, dust, duf, btop, procs
+- **Secrets:** [age](https://github.com/FiloSottile/age) + [sops](https://github.com/getsops/sops) (optional, for encrypted secrets)
 
 ### Arch Linux
 
 ```bash
-sudo pacman -S bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs
+sudo pacman -S bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs age sops
+paru -S blesh-git  # AUR — ble.sh 0.4+
 ```
 
 ## Install
@@ -83,6 +87,14 @@ dotfiles push                # Push to remote
 | `dfa` | `dotfiles add -f` |
 | `dfc` | `dotfiles commit -S -m` |
 | `dfp` | `dotfiles push` |
+| `dfhealth` | `dotfiles health` |
+| `dfem` | `dotfiles edit-meta` |
+
+### Health check
+
+```bash
+dotfiles health   # Colored checklist: repo, deps, config, sync status
+```
 
 ### Meta files
 
@@ -93,6 +105,7 @@ not in `$HOME`. To commit them into the git history:
 dotfiles meta                          # Default message
 dotfiles meta "docs: update README"    # Custom message
 dfmeta "docs: add install script"      # Shortcut
+dotfiles edit-meta                     # Open in $EDITOR, prompt to commit
 ```
 
 ## Structure
@@ -105,7 +118,8 @@ Sourced numerically by `~/.bashrc`. Each file handles one concern:
 |---|---|
 | `01-environment` | PATH, XDG dirs, default apps |
 | `02-history` | History size, dedup, timestamps |
-| `03-options` | Shell options (cdspell, globstar, etc.) |
+| `03-options` | Shell options (cdspell, globstar, etc.) + ble.sh guards |
+| `04-secrets` | sops + age secrets management (secrets-edit, secrets-show) |
 | `05-banner` | Terminal welcome banner |
 | `10-aliases-basic` | Core aliases (ls, cp, grep, etc.) |
 | `11-aliases-modern` | Modern tool replacements (eza, bat, etc.) |
@@ -125,3 +139,8 @@ Lua-based config with Lazy.nvim plugin manager. See `.config/nvim/README.md` for
 ### Starship (`.config/starship.toml`)
 
 Spectrum Powerline theme with pixelated transitions, rounded caps, and Nerd Font XDG directory icons.
+
+### ble.sh (`.config/blesh/init.sh`)
+
+Syntax highlighting with Catppuccin-inspired faces, history-based autosuggestions,
+vi-mode cursor shapes (block/beam). Requires `blesh-git` (0.4+) for truecolor support.
