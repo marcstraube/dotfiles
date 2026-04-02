@@ -253,6 +253,8 @@ dothelp() {
         _dothelp_item "completion-ignore-case" "Case-insensitive tab completion"
         _dothelp_item "show-all-if-ambiguous" "Show matches immediately"
         _dothelp_item "colored-stats" "Color-coded file type indicators"
+        _dothelp_section "Integrations (06-direnv)"
+        _dothelp_item "direnv" "Per-directory env vars (.envrc)"
         _dothelp_section "History (02-history)"
         _dothelp_item "HISTSIZE" "Unlimited (-1)"
         _dothelp_item "HISTCONTROL" "ignoreboth:erasedups"
