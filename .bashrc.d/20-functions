@@ -106,8 +106,8 @@ aurclone() {
     git clone "https://aur.archlinux.org/${1}.git"
 }
 
-# Find and cd to directory (if fzf is available)
-if command -v fzf &> /dev/null; then
+# Find and cd to directory (requires fzf + fd)
+if command -v fzf &> /dev/null && command -v fd &> /dev/null; then
     fcd() {
         local dir
         local preview='ls --color -1'
@@ -122,7 +122,7 @@ if command -v fzf &> /dev/null; then
         local file
         local preview='head -50'
         command -v bat &> /dev/null && preview='bat --color=always --style=numbers --line-range=:500'
-        file=$(fzf --preview "$preview {}") && nvim "$file"
+        file=$(fzf --preview "$preview {}") && ${EDITOR:-vi} "$file"
     }
 fi
 

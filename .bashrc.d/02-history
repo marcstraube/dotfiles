@@ -16,8 +16,8 @@ export HISTTIMEFORMAT="[%F %T] "
 # Multi-line commands as one entry
 shopt -s cmdhist
 
-# Write history after every command (and reload for multi-terminal sync)
-PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
+# Write history after every command (crash-safe, no cross-terminal pollution)
+[[ "$PROMPT_COMMAND" != *"history -a"* ]] && PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
 
 # Ignore common commands in history
 export HISTIGNORE="ls:ll:la:cd:pwd:exit:date:clear:history"
