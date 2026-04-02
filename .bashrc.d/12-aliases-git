@@ -78,9 +78,67 @@ alias gclean='git clean -fd'
 alias gundo='git reset --soft HEAD~1'  # Undo last commit, keep changes
 alias gwip='git add -A && git commit -m "WIP"'  # Quick work-in-progress commit
 
-# Dotfiles alias
-alias dotfiles='/usr/bin/git --git-dir=/home/mst/Code/dotfiles/ --work-tree=/home/mst'
+# Dotfiles — bare git repo management
+dotfiles() {
+    local gitdir="$HOME/Code/dotfiles"
+    case "${1:-}" in
+        meta)
+            shift
+            _dotfiles_meta "$gitdir" "$@"
+            ;;
+        *)
+            /usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" "$@"
+            ;;
+    esac
+}
+
+# Commit meta files (README, install.sh, CLAUDE.md) from bare-repo dir
+_dotfiles_meta() {
+    local gitdir="$1"; shift
+    local msg="${1:-docs: update meta files}"
+    local tmpindex
+    tmpindex=$(mktemp)
+
+    export GIT_INDEX_FILE="$tmpindex" GIT_DIR="$gitdir"
+    trap 'rm -f "$tmpindex"; unset GIT_INDEX_FILE GIT_DIR' RETURN
+
+    git read-tree HEAD
+
+    for f in "$gitdir"/*.md "$gitdir"/*.sh "$gitdir"/.claude/*.md; do
+        [[ -f "$f" ]] || continue
+        local relpath="${f#$gitdir/}"
+        local mode=100644
+        [[ -x "$f" ]] && mode=100755
+        git update-index --add --cacheinfo "$mode,$(git hash-object -w "$f"),$relpath"
+    done
+
+    local tree commit
+    tree=$(git write-tree)
+    commit=$(git commit-tree "$tree" -p HEAD -m "$msg")
+    git update-ref refs/heads/master "$commit"
+
+    # Sync meta files into main index with skip-worktree
+    # (they live in $gitdir, not $HOME, so must be hidden from worktree status)
+    unset GIT_INDEX_FILE
+    local meta_paths=()
+    for f in "$gitdir"/*.md "$gitdir"/*.sh "$gitdir"/.claude/*.md; do
+        [[ -f "$f" ]] || continue
+        local relpath="${f#$gitdir/}"
+        local mode=100644
+        [[ -x "$f" ]] && mode=100755
+        git update-index --add --cacheinfo "$mode,$(git rev-parse "HEAD:$relpath"),$relpath"
+        meta_paths+=("$relpath")
+    done
+    if [[ ${#meta_paths[@]} -gt 0 ]]; then
+        # Paths must resolve from worktree root, not CWD
+        (cd "$HOME" && GIT_WORK_TREE="$HOME" git update-index --skip-worktree "${meta_paths[@]}")
+    fi
+
+    echo "Committed: $(git --git-dir="$gitdir" log --oneline -1)"
+}
+
 alias dfs='dotfiles status -sb'
 alias dfa='dotfiles add -f'
 alias dfc='dotfiles commit -S -m'
 alias dfp='dotfiles push'
+alias dfmeta='dotfiles meta'

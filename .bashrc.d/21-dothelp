@@ -119,8 +119,10 @@ dothelp() {
         _dothelp_item "gclean" "git clean -fd"
         _dothelp_item "gwip" "Quick WIP commit"
         _dothelp_section "Dotfiles"
-        _dothelp_item "dotfiles" "git for bare dotfiles repo"
+        _dothelp_item "dotfiles <cmd>" "git for bare dotfiles repo"
+        _dothelp_item "dotfiles meta [msg]" "Commit meta files (README, install.sh)"
         _dothelp_item "dfs / dfa / dfc / dfp" "status / add -f / commit -S / push"
+        _dothelp_item "dfmeta [msg]" "Shortcut for dotfiles meta"
     }
 
     _dothelp_search() {
