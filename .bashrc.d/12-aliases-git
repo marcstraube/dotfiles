@@ -93,6 +93,9 @@ dotfiles() {
             shift
             _dotfiles_edit_meta "$gitdir" "$@"
             ;;
+        sync)
+            _dotfiles_sync "$gitdir"
+            ;;
         *)
             /usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" "$@"
             ;;
@@ -241,6 +244,52 @@ _dotfiles_meta() {
     echo "Committed: $(git --git-dir="$gitdir" log --oneline -1)"
 }
 
+# Sync dotfiles with remote (fetch, pull --rebase, push)
+_dotfiles_sync() {
+    local gitdir="$1"
+    local git="/usr/bin/git --git-dir=$gitdir --work-tree=$HOME"
+
+    # Fetch first to get current remote state
+    printf "Fetching remote...\n"
+    if ! $git fetch; then
+        printf "\033[31m✗\033[0m  Fetch failed\n"
+        return 1
+    fi
+
+    # Check for uncommitted local changes
+    local dirty
+    dirty=$($git status --porcelain 2>/dev/null | head -1)
+    if [[ -n "$dirty" ]]; then
+        printf "\033[33m!\033[0m  Uncommitted local changes — commit or stash first\n"
+        $git status -sb
+        return 1
+    fi
+
+    # Pull with rebase (fast-forward preferred, rebase if diverged)
+    local behind
+    behind=$($git rev-list --count HEAD..@{upstream} 2>/dev/null || echo 0)
+    if [[ "$behind" -gt 0 ]]; then
+        printf "Pulling %d commit(s)...\n" "$behind"
+        if ! $git pull --rebase; then
+            printf "\033[31m✗\033[0m  Pull failed — resolve conflicts manually\n"
+            return 1
+        fi
+    fi
+
+    # Push if ahead
+    local ahead
+    ahead=$($git rev-list --count @{upstream}..HEAD 2>/dev/null || echo 0)
+    if [[ "$ahead" -gt 0 ]]; then
+        printf "Pushing %d commit(s)...\n" "$ahead"
+        if ! $git push; then
+            printf "\033[31m✗\033[0m  Push failed\n"
+            return 1
+        fi
+    fi
+
+    printf "\033[32m✓\033[0m  Dotfiles in sync\n"
+}
+
 alias dfs='dotfiles status -sb'
 alias dfa='dotfiles add -f'
 alias dfc='dotfiles commit -S -m'
@@ -248,3 +297,4 @@ alias dfp='dotfiles push'
 alias dfmeta='dotfiles meta'
 alias dfhealth='dotfiles health'
 alias dfem='dotfiles edit-meta'
+alias dfsync='dotfiles sync'

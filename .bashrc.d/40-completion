@@ -16,7 +16,24 @@ if [ -r /usr/share/git/completion/git-completion.bash ]; then
     __git_complete gb _git_branch
     __git_complete gd _git_diff
     __git_complete gl _git_log
-    __git_complete dotfiles __git_main
+    # dotfiles: custom subcommands + git fallback
+    _dotfiles_complete() {
+        local subcmds="meta health edit-meta sync"
+        if [[ "${COMP_CWORD}" -eq 1 ]]; then
+            local cur="${COMP_WORDS[COMP_CWORD]}"
+            # Custom subcommands first, then git completions
+            COMPREPLY=( $(compgen -W "$subcmds" -- "$cur") )
+            # Also add git completions
+            __git_main
+        else
+            # After first arg, delegate to git if not a custom subcommand
+            case "${COMP_WORDS[1]}" in
+                meta|health|edit-meta|sync) return 0 ;;
+                *) __git_main ;;
+            esac
+        fi
+    }
+    __git_complete dotfiles _dotfiles_complete
 fi
 
 # Symfony autocomplete
