@@ -27,6 +27,7 @@ $rust\
 $c\
 $fill\
 $cmd_duration\
+${custom.disk_warning}\
 $time
 $character"""
 
@@ -175,6 +176,13 @@ symbol = " "
 [cmd_duration]
 format = "[\uf252 $duration ](bold bright-yellow)"
 min_time = 2000
+
+[custom.disk_warning]
+description = "Warn when root partition usage exceeds 90%"
+command = "df --output=pcent / | tail -1 | tr -dc '0-9'"
+when = '[ "$(df --output=pcent / | tail -1 | tr -dc 0-9)" -ge 90 ]'
+format = "[\U000f02ca $output% ](bold bright-red)"
+shell = ["bash", "--noprofile", "--norc"]
 
 [time]
 format = "[\uf017 $time ](bold bright-cyan)"
