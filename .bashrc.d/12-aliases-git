@@ -125,7 +125,7 @@ _dotfiles_health() {
 
     # Dependency checks
     printf "\n${bold}Dependencies${reset}\n"
-    local deps=(starship nvim eza bat rg fd fzf zoxide dust duf btop procs age sops direnv)
+    local deps=(starship nvim eza bat rg fd fzf zoxide dust duf btop procs age sops direnv atuin)
     for dep in "${deps[@]}"; do
         _health_check "$dep" "command -v $dep"
     done

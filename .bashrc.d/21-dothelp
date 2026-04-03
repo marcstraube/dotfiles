@@ -255,6 +255,7 @@ dothelp() {
         _dothelp_item "colored-stats" "Color-coded file type indicators"
         _dothelp_section "Integrations (06-direnv)"
         _dothelp_item "direnv" "Per-directory env vars (.envrc)"
+        _dothelp_item "atuin (Ctrl-R)" "Enhanced fuzzy history search"
         _dothelp_section "History (02-history)"
         _dothelp_item "HISTSIZE" "Unlimited (-1)"
         _dothelp_item "HISTCONTROL" "ignoreboth:erasedups"

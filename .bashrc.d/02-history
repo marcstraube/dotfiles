@@ -21,3 +21,9 @@ shopt -s cmdhist
 
 # Ignore common commands in history
 export HISTIGNORE="ls:ll:la:cd:pwd:exit:date:clear:history"
+
+# Atuin — enhanced shell history (optional, install: sudo pacman -S atuin)
+# Bash HISTFILE continues as backup alongside Atuin's SQLite database
+if command -v atuin &>/dev/null; then
+    eval "$(atuin init bash --disable-up-arrow)"
+fi
