@@ -10,6 +10,7 @@ Bare git repo for Arch Linux with modular bash config, Neovim (Lua), and Starshi
 | `.config/nvim/` | Neovim config with Lazy.nvim, LSP, Treesitter, Telescope, AI plugins |
 | `.config/starship.toml` | Starship prompt — Spectrum Powerline theme with Nerd Font icons |
 | `.config/blesh/init.sh` | ble.sh config — syntax highlighting, autosuggestions, Catppuccin faces |
+| `.config/atuin/config.toml` | Atuin config — fuzzy history search, vim-insert keymap, no sync |
 | `.gitignore` | Ignore-all strategy (only explicitly added files are tracked) |
 
 ## Dependencies
@@ -20,12 +21,13 @@ Bare git repo for Arch Linux with modular bash config, Neovim (Lua), and Starshi
 - **Editor:** [neovim](https://neovim.io/) >= 0.10
 - **Line editor:** [ble.sh](https://github.com/akinomyoga/ble.sh) >= 0.4 (syntax highlighting, autosuggestions)
 - **Modern CLI tools:** eza, bat, ripgrep, fd, fzf, zoxide, dust, duf, btop, procs
+- **History:** [atuin](https://atuin.sh/) (optional, fuzzy shell history with SQLite backend)
 - **Secrets:** [age](https://github.com/FiloSottile/age) + [sops](https://github.com/getsops/sops) (optional, for encrypted secrets)
 
 ### Arch Linux
 
 ```bash
-sudo pacman -S bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs age sops
+sudo pacman -S bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs age sops atuin
 paru -S blesh-git  # AUR — ble.sh 0.4+
 ```
 
@@ -144,3 +146,8 @@ Spectrum Powerline theme with pixelated transitions, rounded caps, and Nerd Font
 
 Syntax highlighting with Catppuccin-inspired faces, history-based autosuggestions,
 vi-mode cursor shapes (block/beam). Requires `blesh-git` (0.4+) for truecolor support.
+
+### Atuin (`.config/atuin/config.toml`)
+
+Fuzzy shell history search (Ctrl+R) with SQLite backend. Config: compact UI, vim-insert keymap,
+history filter mirroring HISTIGNORE, sync disabled. Bash HISTFILE continues as fallback.

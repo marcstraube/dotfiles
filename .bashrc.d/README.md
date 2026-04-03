@@ -11,11 +11,15 @@ Files are loaded in numerical order:
 ├── 01-environment      # Environment variables, PATH, XDG dirs
 ├── 02-history          # History configuration (eternal, sync)
 ├── 03-options          # Shell options (vi mode, globbing, etc.)
+├── 04-secrets          # sops + age secrets management
+├── 05-banner           # Terminal welcome banner
+├── 06-direnv           # direnv integration
 ├── 10-aliases-basic    # Basic aliases (ls, cd, cp, etc.)
 ├── 11-aliases-modern   # Modern tool aliases (eza, bat, ripgrep)
 ├── 12-aliases-git      # Git aliases (comprehensive)
 ├── 13-aliases-nvim     # NeoVim aliases
 ├── 20-functions        # Shell functions (extract, mkcd, etc.)
+├── 21-dothelp          # Quick reference help system (dothelp)
 ├── 30-nvm              # Node Version Manager (lazy loaded)
 ├── 40-completion       # Bash completion, fzf
 ├── 50-prompt           # Starship prompt
@@ -69,7 +73,7 @@ dfp             # Push
 
 ### 🔍 fzf Integration
 Fuzzy search everything:
-- `Ctrl+R` - Fuzzy history search
+- `Ctrl+R` - Fuzzy history search (atuin if installed, else fzf)
 - `Ctrl+T` - Fuzzy file search
 - `Alt+C` - Fuzzy cd
 - `fcd` - Fuzzy find and cd to directory
@@ -100,7 +104,7 @@ Aliases are stored in `99-custom-aliases` and survive shell restarts.
 ### Recommended
 ```bash
 # Arch Linux
-sudo pacman -S starship fzf fd ripgrep bat eza zoxide dust duf btop
+sudo pacman -S starship fzf fd ripgrep bat eza zoxide dust duf btop atuin direnv
 
 # Or individually:
 sudo pacman -S starship    # Modern prompt
@@ -113,6 +117,8 @@ sudo pacman -S zoxide      # Smarter cd
 sudo pacman -S dust        # Modern du
 sudo pacman -S duf         # Modern df
 sudo pacman -S btop        # Modern top
+sudo pacman -S atuin       # Shell history (SQLite)
+sudo pacman -S direnv      # Per-directory env
 ```
 
 **Note:** Config works fine without these! It auto-detects and falls back to basic commands.
@@ -229,6 +235,7 @@ curl -sS https://starship.rs/install.sh | sh
 - [Starship docs](https://starship.rs/)
 - [fzf wiki](https://github.com/junegunn/fzf/wiki)
 - [Bash manual](https://www.gnu.org/software/bash/manual/)
+- [Atuin docs](https://docs.atuin.sh/)
 
 ---
 
