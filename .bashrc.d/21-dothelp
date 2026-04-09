@@ -39,6 +39,7 @@ dothelp() {
         _dothelp_item "functions" "All custom shell functions"
         _dothelp_item "modern" "Modern CLI replacements (eza, bat, etc.)"
         _dothelp_item "banner" "Terminal banner configuration"
+        _dothelp_item "keys" "Keyboard shortcuts (ble.sh, vi-mode, fzf)"
         _dothelp_item "options" "Shell options & history settings"
         echo ""
         printf "  Source: ${yellow}~/.bashrc.d/${reset}\n"
@@ -265,6 +266,31 @@ dothelp() {
         _dothelp_item "cmdhist" "Multi-line as single entry"
     }
 
+    _dothelp_keys() {
+        _dothelp_header "Keys & Shortcuts"
+        _dothelp_section "ble.sh Autosuggestions"
+        _dothelp_item "Right / Ctrl+F" "Accept full suggestion"
+        _dothelp_item "Alt+F" "Accept next word"
+        _dothelp_item "Tab" "Regular completion (files, commands)"
+        _dothelp_section "Vi Mode (set -o vi)"
+        _dothelp_item "Esc" "Normal mode"
+        _dothelp_item "i / a / A" "Insert / append / append end-of-line"
+        _dothelp_item "0 / $ / w / b" "Line start / end / word fwd / word back"
+        _dothelp_item "dd / yy / p" "Delete line / yank line / paste"
+        _dothelp_item "cc / cw" "Change line / change word"
+        _dothelp_item "/ / ?" "Search fwd / backward in history"
+        _dothelp_section "Command Line"
+        _dothelp_item "Ctrl+R" "History search (atuin)"
+        _dothelp_item "Ctrl+J" "Force execute (always)"
+        _dothelp_item "Enter" "Execute if syntax complete, else newline"
+        _dothelp_item "Ctrl+L" "Clear screen"
+        _dothelp_item "Ctrl+C" "Cancel current input"
+        _dothelp_item "Alt+." "Insert last argument"
+        _dothelp_section "fzf"
+        _dothelp_item "Ctrl+T" "Fuzzy file picker (insert path)"
+        _dothelp_item "Alt+C" "Fuzzy cd into directory"
+    }
+
     local output
     case "${1:-}" in
         nav)        output=$(_dothelp_nav) ;;
@@ -277,6 +303,7 @@ dothelp() {
         modern)     output=$(_dothelp_modern) ;;
         banner)     output=$(_dothelp_banner) ;;
         options)    output=$(_dothelp_options) ;;
+        keys)       output=$(_dothelp_keys) ;;
         "")         output=$(_dothelp_overview) ;;
         *)
             printf "Unknown category: ${bold}%s${reset}\n" "$1"
@@ -284,7 +311,7 @@ dothelp() {
             unset -f _dothelp_header _dothelp_item _dothelp_section _dothelp_overview \
                      _dothelp_nav _dothelp_files _dothelp_git _dothelp_search \
                      _dothelp_system _dothelp_editor _dothelp_functions _dothelp_modern \
-                     _dothelp_banner _dothelp_options
+                     _dothelp_banner _dothelp_options _dothelp_keys
             return 1
             ;;
     esac
