@@ -42,3 +42,11 @@ bleopt exec_errexit_mark=
 # Transient prompt — collapse previous prompts after command execution
 bleopt prompt_ps1_transient=trim
 bleopt prompt_ps1_final='$(starship module time)$(starship module character)'
+
+# --- Vi keymap: Enter accepts when syntax is complete, otherwise newline ---
+blehook/eval-after-load keymap_vi '
+    ble-bind -m vi_imap -f C-m  "accept-line syntax"
+    ble-bind -m vi_imap -f RET  "accept-line syntax"
+    ble-bind -m vi_nmap -f C-m  "accept-line syntax"
+    ble-bind -m vi_nmap -f RET  "accept-line syntax"
+'

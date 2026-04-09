@@ -1,0 +1,8 @@
+[Unit]
+Description=Check for Arch package updates
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'checkupdates 2>/dev/null | wc -l > "${XDG_CACHE_HOME:-$HOME/.cache}/banner-updates"'

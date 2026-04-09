@@ -114,21 +114,11 @@ case "$_banner_parent" in
                 _add_info "Network:" "${net_parts[*]//·/ }"
             fi
 
-            # Updates (cached, refreshed at most once per hour)
+            # Updates (read from cache, populated by checkupdates.timer)
             local updates=0
             local cache_file="${XDG_CACHE_HOME:-$HOME/.cache}/banner-updates"
-            local cache_max_age=3600
-            if [ -f "$cache_file" ]; then
-                local cache_age=$(( $(date +%s) - $(stat -c %Y "$cache_file") ))
-                if (( cache_age < cache_max_age )); then
-                    updates=$(cat "$cache_file")
-                fi
-            fi
-            if [ "$updates" -eq 0 ] && command -v checkupdates &> /dev/null; then
-                updates=$(checkupdates 2>/dev/null | wc -l)
-                echo "$updates" > "$cache_file"
-            fi
-            if [ "$updates" -gt 0 ] 2>/dev/null; then
+            [ -f "$cache_file" ] && updates=$(< "$cache_file")
+            if [ "${updates:-0}" -gt 0 ] 2>/dev/null; then
                 _add_info "Updates:" "$updates Pakete verfügbar" "$y"
             fi
 

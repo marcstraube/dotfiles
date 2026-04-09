@@ -1,0 +1,105 @@
+# This is the configuration file for Ghostty.
+#
+# This template file has been automatically created at the following
+# path since Ghostty couldn't find any existing config files on your system:
+#
+#   /home/mst/.config/ghostty/config
+#
+# The template does not set any default options, since Ghostty ships
+# with sensible defaults for all options. Users should only need to set
+# options that they want to change from the default.
+#
+# Run `ghostty +show-config --default --docs` to view a list of
+# all available config options and their default values.
+#
+# Additionally, each config option is also explained in detail
+# on Ghostty's website, at https://ghostty.org/docs/config.
+
+# Config syntax crash course
+# ==========================
+# # The config file consists of simple key-value pairs,
+# # separated by equals signs.
+# font-family = Iosevka
+# window-padding-x = 2
+#
+# # Spacing around the equals sign does not matter.
+# # All of these are identical:
+# key=value
+# key= value
+# key =value
+# key = value
+#
+# # Any line beginning with a # is a comment. It's not possible to put
+# # a comment after a config option, since it would be interpreted as a
+# # part of the value. For example, this will have a value of "#123abc":
+# background = #123abc
+#
+# # Empty values are used to reset config keys to default.
+# key =
+#
+# # Some config options have unique syntaxes for their value,
+# # which is explained in the docs for that config option.
+# # Just for example:
+# resize-overlay-duration = 4s 200ms
+
+# Font Configuration
+
+# Workaround: Ghostty's shell integration (OSC 133;A in __ghostty_precmd)
+# desynchronizes ble.sh's cursor tracking, causing the prompt to render twice.
+# Fixed in Ghostty 1.3.2 (PR #11644) — remove this line after upgrading.
+# See: https://github.com/akinomyoga/ble.sh/issues/684
+shell-integration = none
+
+font-family = FiraCode Nerd Font Mono
+font-size = 12
+
+# Terminal Core Colors
+background = #1A1A1A
+foreground = #F0F0F0
+cursor-color = #F0F0F0
+
+# Selection Colors
+selection-background = #007ACC
+selection-foreground = #FFFFFF
+
+# Blueberry
+palette = 0=#22A7F0
+# Mint
+palette = 1=#3DCD58
+# Lime
+palette = 2=#B0DE38
+# Banana
+palette = 3=#FFE135
+# Orange
+palette = 4=#FFA500
+# Strawberry
+palette = 5=#FF3366
+# Bubblegum
+palette = 6=#FF007F
+# Grape
+palette = 7=#800080
+# Cocoa
+palette = 8=#654321
+# Slate
+palette = 9=#708090
+# Darker Blueberry
+palette = 10=#1A7FB3
+# Darker Mint
+palette = 11=#2E9A43
+# Darker Lime
+palette = 12=#85A62A
+# Darker Banana
+palette = 13=#BFB028
+# Darker Orange
+palette = 14=#BF7D00
+# Darker Strawberry
+palette = 15=#BF274E
+# Darker Bubblegum
+palette = 16=#BF0060
+# Darker Grape
+palette = 17=#600060
+# Darker Cocoa
+palette = 18=#4C3219
+# Darker Slate
+palette = 19=#55606B
+
