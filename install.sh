@@ -7,7 +7,7 @@
 set -euo pipefail
 
 REPO="${DOTFILES_REPO:-git@github.com:marcstraube/dotfiles.git}"
-DOTDIR="${DOTFILES_DIR:-$HOME/Code/dotfiles}"
+DOTDIR="${DOTFILES_DIR:-$HOME/Projekte/dotfiles}"
 BACKUPDIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 DEPS=(bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs)
 META_FILES=(README.md install.sh .claude/CLAUDE.md)
@@ -80,7 +80,12 @@ fi
 echo ""
 echo "==> Done!"
 echo ""
-echo "Add the dotfiles alias to your ~/.bashrc (or it's already in .bashrc.d/):"
-echo "  alias dotfiles='/usr/bin/git --git-dir=$DOTDIR --work-tree=\$HOME'"
+echo "The 'dotfiles' shell function (in .bashrc.d/12-aliases-git) defaults to"
+echo "  DOTFILES_DIR=\$HOME/Projekte/dotfiles"
+if [[ "$DOTDIR" != "$HOME/Projekte/dotfiles" ]]; then
+    echo ""
+    echo "You installed to a different location. Add this to ~/.bashrc.d/99-custom-aliases:"
+    echo "  export DOTFILES_DIR=\"$DOTDIR\""
+fi
 echo ""
 echo "Then: source ~/.bashrc && dotfiles status"

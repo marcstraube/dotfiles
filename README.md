@@ -42,10 +42,11 @@ curl -Lks https://raw.githubusercontent.com/marcstraube/dotfiles/master/install.
 ### Manual setup
 
 ```bash
-git clone --bare git@github.com:marcstraube/dotfiles.git ~/Code/dotfiles
+# Pick any location — just keep it consistent with DOTFILES_DIR below
+git clone --bare git@github.com:marcstraube/dotfiles.git ~/Projekte/dotfiles
 
 # Temporary alias for setup
-alias dotfiles='/usr/bin/git --git-dir=$HOME/Code/dotfiles/ --work-tree=$HOME'
+alias dotfiles='/usr/bin/git --git-dir=$HOME/Projekte/dotfiles/ --work-tree=$HOME'
 
 # Checkout files into $HOME (backup conflicts first if needed)
 dotfiles checkout
@@ -57,16 +58,30 @@ dotfiles config --local status.showUntrackedFiles no
 dotfiles update-index --skip-worktree README.md install.sh .claude/CLAUDE.md
 ```
 
+### Repo location
+
+The `dotfiles` shell function (in `.bashrc.d/12-aliases-git`) reads `$DOTFILES_DIR`,
+defaulting to `~/Projekte/dotfiles`. To use a different location, export the
+variable before the bashrc.d files are sourced — easiest in `99-custom-aliases`
+(machine-local, untracked):
+
+```bash
+export DOTFILES_DIR="$HOME/wherever/dotfiles"
+```
+
+The installer reads the same variable, so `DOTFILES_DIR=… ./install.sh` or
+`--dir` both work.
+
 ### Options
 
 ```
 install.sh [--repo <url>] [--dir <path>]
 ```
 
-| Flag | Default | Description |
-|---|---|---|
-| `--repo` | `git@github.com:marcstraube/dotfiles.git` | Repository URL |
-| `--dir` | `~/Code/dotfiles` | Bare repo location |
+| Flag | Env var | Default | Description |
+|---|---|---|---|
+| `--repo` | `DOTFILES_REPO` | `git@github.com:marcstraube/dotfiles.git` | Repository URL |
+| `--dir`  | `DOTFILES_DIR`  | `~/Projekte/dotfiles` | Bare repo location |
 
 The installer automatically backs up conflicting files to `~/.dotfiles-backup/`.
 
@@ -100,7 +115,7 @@ dotfiles health   # Colored checklist: repo, deps, config, sync status
 
 ### Meta files
 
-Files like `README.md` and `install.sh` live in the bare-repo directory (`~/Code/dotfiles/`),
+Files like `README.md` and `install.sh` live in the bare-repo directory (`$DOTFILES_DIR`),
 not in `$HOME`. To commit them into the git history:
 
 ```bash
