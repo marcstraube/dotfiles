@@ -222,9 +222,15 @@ _dotfiles_meta() {
         git update-index --add --cacheinfo "$mode,$(git hash-object -w "$f"),$relpath"
     done
 
+    # commit-tree is plumbing — it does not honor commit.gpgsign, so we check it ourselves
+    local sign_flag=()
+    if [[ "$(git config --get --type=bool commit.gpgsign 2>/dev/null)" == "true" ]]; then
+        sign_flag=(-S)
+    fi
+
     local tree commit
     tree=$(git write-tree)
-    commit=$(git commit-tree "$tree" -p HEAD -m "$msg")
+    commit=$(git commit-tree "$tree" -p HEAD "${sign_flag[@]}" -m "$msg")
     git update-ref refs/heads/master "$commit"
 
     # Sync meta files into main index with skip-worktree
