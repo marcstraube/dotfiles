@@ -197,7 +197,7 @@ Sourced numerically by `~/.bashrc`. Each file handles one concern:
 | `30-nvm`             | Node Version Manager lazy-loading                             |
 | `40-completion`      | Bash completions                                              |
 | `50-prompt`          | Starship prompt init                                          |
-| `99-custom-aliases`  | Machine-local overrides (not tracked)                         |
+| `99-custom-aliases`  | Storage for `mkalias`/`rmalias` (untracked, bootstrapped by install.sh) |
 
 ### Neovim (`.config/nvim/`)
 

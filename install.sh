@@ -85,6 +85,22 @@ else
     echo "  pre-push.sh not found, skipping"
 fi
 
+echo "==> Bootstrapping 99-custom-aliases"
+custom_aliases="$HOME/.bashrc.d/99-custom-aliases"
+if [[ ! -f "$custom_aliases" ]]; then
+    cat > "$custom_aliases" <<'EOF'
+# ============================================================================
+# Custom Aliases (managed by mkalias/rmalias)
+# ============================================================================
+# This file is auto-generated. Don't edit manually!
+# Use: mkalias <name> "<command>" to add aliases
+# Use: rmalias <name> to remove aliases
+EOF
+    echo "  Created $custom_aliases"
+else
+    echo "  $custom_aliases already exists"
+fi
+
 echo "==> Enabling user systemd timers"
 if command -v systemctl &>/dev/null; then
     systemctl --user daemon-reload
