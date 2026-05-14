@@ -7,43 +7,39 @@ cursor-color = #F0F0F0
 selection-background = #007ACC
 selection-foreground = #FFFFFF
 
-# Blueberry
-palette = 0=#22A7F0
-# Mint
-palette = 1=#3DCD58
-# Lime
-palette = 2=#B0DE38
-# Banana
-palette = 3=#FFE135
-# Orange
-palette = 4=#FFA500
-# Strawberry
-palette = 5=#FF3366
-# Bubblegum
-palette = 6=#FF007F
-# Grape
-palette = 7=#800080
-# Cocoa
-palette = 8=#654321
-# Slate
-palette = 9=#708090
-# Darker Blueberry
-palette = 10=#1A7FB3
-# Darker Mint
-palette = 11=#2E9A43
-# Darker Lime
-palette = 12=#85A62A
-# Darker Banana
-palette = 13=#BFB028
-# Darker Orange
-palette = 14=#BF7D00
-# Darker Strawberry
-palette = 15=#BF274E
-# Darker Bubblegum
-palette = 16=#BF0060
-# Darker Grape
-palette = 17=#600060
-# Darker Cocoa
-palette = 18=#4C3219
-# Darker Slate
-palette = 19=#55606B
+# Palette — standard ANSI semantics (slots 0-7 normal, 8-15 brighter).
+# Values match the curated starship-prompt palette so the prompt renders
+# identically whether colors come from here or from a dynamic source.
+
+# black
+palette = 0=#1A1A1A
+# red
+palette = 1=#E74856
+# green
+palette = 2=#16C60C
+# yellow
+palette = 3=#F9A825
+# blue
+palette = 4=#3B78FF
+# magenta
+palette = 5=#B4009E
+# cyan
+palette = 6=#13A6E0
+# white
+palette = 7=#F0F0F0
+# bright-black (gray)
+palette = 8=#555555
+# bright-red
+palette = 9=#FF6B6B
+# bright-green
+palette = 10=#4EC9B0
+# bright-yellow
+palette = 11=#FFCC00
+# bright-blue
+palette = 12=#5C9CFF
+# bright-magenta
+palette = 13=#D670D6
+# bright-cyan
+palette = 14=#00D4FF
+# bright-white
+palette = 15=#FFFFFF
