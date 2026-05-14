@@ -9,8 +9,7 @@ set -euo pipefail
 REPO="${DOTFILES_REPO:-git@github.com:marcstraube/dotfiles.git}"
 DOTDIR="${DOTFILES_DIR:-$HOME/Projekte/dotfiles}"
 BACKUPDIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
-DEPS=(bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs)
-META_FILES=(README.md install.sh pre-push.sh .claude/CLAUDE.md)
+META_FILES=(README.md install.sh pre-push.sh dependencies.sh .claude/CLAUDE.md)
 
 # ---------------------------------------------------------------------------
 
@@ -59,13 +58,13 @@ for f in "${META_FILES[@]}"; do
 done
 
 echo "==> Checking dependencies"
+# shellcheck source=dependencies.sh
+source "$DOTDIR/dependencies.sh"
 missing=()
-for dep in "${DEPS[@]}"; do
-    case $dep in
-        neovim)  command -v nvim &>/dev/null || missing+=("$dep") ;;
-        ripgrep) command -v rg &>/dev/null   || missing+=("$dep") ;;
-        *)       command -v "$dep" &>/dev/null || missing+=("$dep") ;;
-    esac
+for entry in "${DOTFILES_DEPS[@]}"; do
+    bin="${entry%%:*}"
+    pkg="${entry##*:}"
+    command -v "$bin" &>/dev/null || missing+=("$pkg")
 done
 
 if [[ ${#missing[@]} -gt 0 ]]; then
