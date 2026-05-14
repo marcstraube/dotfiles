@@ -10,7 +10,7 @@ REPO="${DOTFILES_REPO:-git@github.com:marcstraube/dotfiles.git}"
 DOTDIR="${DOTFILES_DIR:-$HOME/Projekte/dotfiles}"
 BACKUPDIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 DEPS=(bash starship neovim eza bat ripgrep fd fzf zoxide dust duf btop procs)
-META_FILES=(README.md install.sh .claude/CLAUDE.md)
+META_FILES=(README.md install.sh pre-push.sh .claude/CLAUDE.md)
 
 # ---------------------------------------------------------------------------
 
@@ -75,6 +75,15 @@ if [[ ${#missing[@]} -gt 0 ]]; then
     fi
 else
     echo "  All dependencies found"
+fi
+
+echo "==> Installing git pre-push hook"
+if [[ -f "$DOTDIR/pre-push.sh" ]]; then
+    ln -sf ../pre-push.sh "$DOTDIR/hooks/pre-push"
+    chmod +x "$DOTDIR/pre-push.sh"
+    echo "  Linked $DOTDIR/hooks/pre-push -> ../pre-push.sh"
+else
+    echo "  pre-push.sh not found, skipping"
 fi
 
 echo "==> Enabling user systemd timers"
