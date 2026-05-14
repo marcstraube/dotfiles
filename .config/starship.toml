@@ -10,7 +10,8 @@ scan_timeout = 100
 
 # \ue0b0 = Powerline right separator
 format = """
-[\ue0b6](fg:blue)\
+${custom.start_local}\
+${custom.start_ssh}\
 $os\
 $username\
 [\ue0c4](bg:magenta fg:blue)\
@@ -51,6 +52,21 @@ bright-cyan = "#00d4ff"
 gray = "#555555"
 light-gray = "#cccccc"
 white = "#ffffff"
+
+# ============================================================================
+# SSH detection — visible badge at prompt start when remote
+# ============================================================================
+[custom.start_local]
+description = "Round start cap for local sessions"
+when = """test -z "$SSH_CONNECTION" """
+format = "[\ue0b6](fg:blue)"
+shell = ["bash", "--noprofile", "--norc"]
+
+[custom.start_ssh]
+description = "Red SSH badge + transition into the blue OS segment"
+when = """test -n "$SSH_CONNECTION" """
+format = "[\ue0b6](fg:red)[\uea7a SSH ](bg:red fg:white bold)[\ue0c4](bg:blue fg:red)"
+shell = ["bash", "--noprofile", "--norc"]
 
 # ============================================================================
 # OS Module - Distro logo
