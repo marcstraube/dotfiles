@@ -77,6 +77,14 @@ else
     echo "  All dependencies found"
 fi
 
+echo "==> Enabling user systemd timers"
+if command -v systemctl &>/dev/null; then
+    systemctl --user daemon-reload
+    systemctl --user enable --now checkupdates.timer
+else
+    echo "  systemctl not found, skipping"
+fi
+
 echo ""
 echo "==> Done!"
 echo ""
