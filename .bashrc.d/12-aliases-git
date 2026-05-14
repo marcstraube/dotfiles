@@ -131,10 +131,16 @@ _dotfiles_health() {
 
     # Dependency checks
     printf "\n${bold}Dependencies${reset}\n"
-    local deps=(starship nvim eza bat rg fd fzf zoxide dust duf btop procs age sops direnv atuin)
-    for dep in "${deps[@]}"; do
-        _health_check "$dep" "command -v $dep"
-    done
+    # shellcheck source=/dev/null
+    if [[ -f "$gitdir/dependencies.sh" ]]; then
+        source "$gitdir/dependencies.sh"
+        for entry in "${DOTFILES_DEPS[@]}"; do
+            local bin="${entry%%:*}"
+            _health_check "$bin" "command -v $bin"
+        done
+    else
+        printf "  %b  %s\n" "$fail" "dependencies.sh missing in \$gitdir"
+    fi
 
     # Config checks
     printf "\n${bold}Configuration${reset}\n"
