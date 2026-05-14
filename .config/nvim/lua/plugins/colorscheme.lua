@@ -31,6 +31,10 @@ return {
 
             -- Set colorscheme
             vim.cmd.colorscheme("catppuccin")
+
+            -- Optional override: hyprdsktp may write colors/hyprdsktp.lua when active.
+            -- pcall makes this a no-op when the file is absent.
+            pcall(vim.cmd.colorscheme, "hyprdsktp")
         end,
     },
 
