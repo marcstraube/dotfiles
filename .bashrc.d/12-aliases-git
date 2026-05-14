@@ -146,6 +146,8 @@ _dotfiles_health() {
     printf "\n${bold}Configuration${reset}\n"
     _health_check "Starship active" "[[ \"\$STARSHIP_SHELL\" == 'bash' ]] || command -v starship"
     _health_check "ble.sh available" "[[ -f /usr/share/blesh/ble.sh ]]"
+    _health_check "Pre-push hook symlinked" "[[ -L '$gitdir/hooks/pre-push' && \"\$(readlink '$gitdir/hooks/pre-push')\" == '../pre-push.sh' ]]"
+    _health_check "GPG signing enabled" "[[ \"\$(/usr/bin/git --git-dir='$gitdir' config --get --type=bool commit.gpgsign 2>/dev/null)\" == 'true' ]]"
 
     # Skip-worktree check
     local skip_count
