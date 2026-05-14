@@ -82,6 +82,7 @@ mkalias() {
         return 1
     fi
     echo "alias ${1}=\"${2}\"" >> "${HOME}/.bashrc.d/99-custom-aliases"
+    # shellcheck disable=SC2139  # expand at define time — that's the point of mkalias
     alias "${1}=${2}"
     echo "Alias created: ${1}='${2}'"
 }
@@ -138,7 +139,8 @@ fi
 note() {
     local note_dir="$HOME/notes"
     mkdir -p "$note_dir"
-    local note_file="$note_dir/$(date +%Y-%m-%d).md"
+    local note_file
+    note_file="$note_dir/$(date +%Y-%m-%d).md"
 
     if [ -z "$1" ]; then
         nvim "$note_file"
@@ -165,7 +167,8 @@ usage() {
 
 # Create and navigate to a temporary directory
 tmpd() {
-    local tmpdir=$(mktemp -d)
+    local tmpdir
+    tmpdir=$(mktemp -d)
     echo "Created temporary directory: $tmpdir"
     cd "$tmpdir" || return 1
 }

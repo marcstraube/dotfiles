@@ -59,7 +59,8 @@ case "$_banner_parent" in
                 local indent
                 indent=$(printf '%*s' "$label_width" '')
 
-                local words=($value)
+                local words
+                read -ra words <<< "$value"
                 local line="" first=true
 
                 for word in "${words[@]}"; do

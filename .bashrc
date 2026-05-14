@@ -11,6 +11,7 @@
 # Load files from ~/.bashrc.d
 if [ -d ${HOME}/.bashrc.d ]; then
     for file in ${HOME}/.bashrc.d/[0-9]*; do
+        # shellcheck source=/dev/null  # intentional dynamic load of .bashrc.d/*
         [ -f "$file" ] && source "$file"
     done
 fi

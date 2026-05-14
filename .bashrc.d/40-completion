@@ -22,6 +22,7 @@ if [ -r /usr/share/git/completion/git-completion.bash ]; then
         if [[ "${COMP_CWORD}" -eq 1 ]]; then
             local cur="${COMP_WORDS[COMP_CWORD]}"
             # Custom subcommands first, then git completions
+            # shellcheck disable=SC2207  # canonical bash completion idiom
             COMPREPLY=( $(compgen -W "$subcmds" -- "$cur") )
             # Also add git completions
             __git_main

@@ -184,6 +184,7 @@ _dotfiles_health() {
 
     # Ahead/behind
     local ab
+    # shellcheck disable=SC1083  # @{upstream} is git refspec, not brace expansion
     ab=$(/usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" rev-list --left-right --count HEAD...@{upstream} 2>/dev/null)
     if [[ -n "$ab" ]]; then
         local ahead behind
@@ -302,6 +303,7 @@ _dotfiles_sync() {
 
     # Pull with rebase (fast-forward preferred, rebase if diverged)
     local behind
+    # shellcheck disable=SC1083  # @{upstream} is git refspec, not brace expansion
     behind=$($git rev-list --count HEAD..@{upstream} 2>/dev/null || echo 0)
     if [[ "$behind" -gt 0 ]]; then
         printf "Pulling %d commit(s)...\n" "$behind"
@@ -313,6 +315,7 @@ _dotfiles_sync() {
 
     # Push if ahead
     local ahead
+    # shellcheck disable=SC1083  # @{upstream} is git refspec, not brace expansion
     ahead=$($git rev-list --count @{upstream}..HEAD 2>/dev/null || echo 0)
     if [[ "$ahead" -gt 0 ]]; then
         printf "Pushing %d commit(s)...\n" "$ahead"
