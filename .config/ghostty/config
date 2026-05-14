@@ -53,53 +53,7 @@ shell-integration = none
 font-family = FiraCode Nerd Font Mono
 font-size = 12
 
-# Terminal Core Colors
-background = #1A1A1A
-foreground = #F0F0F0
-cursor-color = #F0F0F0
-
-# Selection Colors
-selection-background = #007ACC
-selection-foreground = #FFFFFF
-
-# Blueberry
-palette = 0=#22A7F0
-# Mint
-palette = 1=#3DCD58
-# Lime
-palette = 2=#B0DE38
-# Banana
-palette = 3=#FFE135
-# Orange
-palette = 4=#FFA500
-# Strawberry
-palette = 5=#FF3366
-# Bubblegum
-palette = 6=#FF007F
-# Grape
-palette = 7=#800080
-# Cocoa
-palette = 8=#654321
-# Slate
-palette = 9=#708090
-# Darker Blueberry
-palette = 10=#1A7FB3
-# Darker Mint
-palette = 11=#2E9A43
-# Darker Lime
-palette = 12=#85A62A
-# Darker Banana
-palette = 13=#BFB028
-# Darker Orange
-palette = 14=#BF7D00
-# Darker Strawberry
-palette = 15=#BF274E
-# Darker Bubblegum
-palette = 16=#BF0060
-# Darker Grape
-palette = 17=#600060
-# Darker Cocoa
-palette = 18=#4C3219
-# Darker Slate
-palette = 19=#55606B
+# Theme — static defaults; hyprdsktp may overlay dynamic colors when active
+config-file = default-theme
+config-file = ?theme-hyprdsktp
 
