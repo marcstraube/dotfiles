@@ -143,8 +143,28 @@ _dotfiles_health() {
 
     # Skip-worktree check
     local skip_count
-    skip_count=$(/usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" ls-files -v 2>/dev/null | grep -c '^S ' || true)
+    skip_count=$(cd "$HOME" && /usr/bin/git --git-dir="$gitdir" --work-tree="$HOME" ls-files -v 2>/dev/null | grep -c '^S ' || true)
     _health_check "Skip-worktree set on meta files ($skip_count files)" "[[ $skip_count -gt 0 ]]"
+
+    # Systemd user units from repo
+    local units
+    units=$(/usr/bin/git --git-dir="$gitdir" ls-tree -r --name-only master 2>/dev/null \
+        | grep -E '^\.config/systemd/user/.+\.(timer|service)$' || true)
+    if [[ -n "$units" ]]; then
+        printf "\n${bold}Systemd User Units${reset}\n"
+        while IFS= read -r unit_path; do
+            local unit="${unit_path##*/}"
+            case "$unit" in
+                *.timer)
+                    _health_check "$unit enabled" "systemctl --user is-enabled $unit"
+                    _health_check "$unit active"  "systemctl --user is-active $unit"
+                    ;;
+                *.service)
+                    _health_check "$unit loaded" "systemctl --user cat $unit"
+                    ;;
+            esac
+        done <<< "$units"
+    fi
 
     # Uncommitted changes
     printf "\n${bold}Status${reset}\n"
