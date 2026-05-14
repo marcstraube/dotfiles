@@ -53,6 +53,11 @@ shell-integration = none
 font-family = FiraCode Nerd Font Mono
 font-size = 12
 
+# Symmetric padding on all four edges (default is 2px + asymmetric leftover).
+window-padding-x = 6
+window-padding-y = 6
+window-padding-balance = true
+
 # Theme — static defaults; hyprdsktp may overlay dynamic colors when active
 config-file = default-theme
 config-file = ?theme-hyprdsktp
