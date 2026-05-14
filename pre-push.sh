@@ -42,7 +42,7 @@ if command -v shellcheck &>/dev/null; then
     for f in "${shell_files[@]}"; do
         abs=$(_locate "$f")
         [[ -n "$abs" ]] || continue
-        if ! shellcheck -s bash -S error "$abs"; then
+        if ! shellcheck -s bash -S warning "$abs"; then
             echo "  shellcheck failed: $f" >&2
             fail=1
         fi
