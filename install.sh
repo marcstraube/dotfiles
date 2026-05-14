@@ -80,7 +80,11 @@ fi
 echo "==> Enabling user systemd timers"
 if command -v systemctl &>/dev/null; then
     systemctl --user daemon-reload
-    systemctl --user enable --now checkupdates.timer
+    while IFS= read -r timer_path; do
+        timer="${timer_path##*/}"
+        echo "  Enabling $timer"
+        systemctl --user enable --now "$timer"
+    done < <(_dotfiles ls-tree -r --name-only HEAD | grep -E '^\.config/systemd/user/.+\.timer$' || true)
 else
     echo "  systemctl not found, skipping"
 fi
