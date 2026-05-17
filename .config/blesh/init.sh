@@ -4,6 +4,13 @@
 # Sourced during "source ble.sh --noattach" — vi keymap not loaded yet.
 # Vi-specific settings (cursor, mode indicator) go in ~/.bashrc after ble-attach.
 
+# Bail out on ble.sh < 0.4 (Arch repo ships 0.3.4; AUR blesh-git is 0.4+).
+# Without this, ble-face / new bleopts / blehook spam errors at every shell start.
+# ble.sh encoding: major*10000 + minor*100 + patch (0.4.0 = 400)
+if ((${_ble_version:-0} < 400)); then
+    return 0
+fi
+
 # --- Syntax Highlighting (Catppuccin-inspired) ---
 ble-face -s syntax_default           'fg=white'
 ble-face -s syntax_command           'fg=cyan'
