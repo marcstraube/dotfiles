@@ -3,8 +3,9 @@ Description=Periodically check for Arch package updates
 
 [Timer]
 OnBootSec=2min
-OnUnitActiveSec=1h
+OnCalendar=hourly
 Persistent=true
+RandomizedDelaySec=5min
 
 [Install]
 WantedBy=timers.target
