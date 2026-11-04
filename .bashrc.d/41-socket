@@ -1,0 +1,9 @@
+# ============================================================================
+# Socket CLI - tab completion (if installed)
+# ============================================================================
+
+if [[ -f "$HOME/.local/share/socket/completion/socket-completion.bash" ]]; then
+    # shellcheck source=/dev/null
+    source "$HOME/.local/share/socket/completion/socket-completion.bash"
+    complete -F _socket_completion socket
+fi

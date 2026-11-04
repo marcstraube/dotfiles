@@ -23,6 +23,7 @@ Files are loaded in numerical order:
 ├── 21-dothelp          # Quick reference help system (dothelp)
 ├── 30-nvm              # Node Version Manager (lazy loaded)
 ├── 40-completion       # Bash completion, fzf
+├── 41-socket           # Socket CLI completion (if installed)
 ├── 50-prompt           # Starship prompt
 └── 99-custom-aliases   # Auto-generated (via mkalias/rmalias)
 ```
