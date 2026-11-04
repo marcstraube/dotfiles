@@ -57,16 +57,18 @@ white = "bright-white"
 
 # ============================================================================
 # SSH detection — visible badge at prompt start when remote
+# Not inside tmux: SSH_CONNECTION there is stale (inherited from whoever
+# started the server); the tmux status bar shows "#S @ #h" instead.
 # ============================================================================
 [custom.start_local]
 description = "Round start cap for local sessions"
-when = """test -z "$SSH_CONNECTION" """
+when = """test -z "$SSH_CONNECTION" || test -n "$TMUX" """
 format = "[\ue0b6](fg:blue)"
 shell = ["bash", "--noprofile", "--norc"]
 
 [custom.start_ssh]
 description = "Red SSH badge + transition into the blue OS segment"
-when = """test -n "$SSH_CONNECTION" """
+when = """test -n "$SSH_CONNECTION" && test -z "$TMUX" """
 format = "[\ue0b6](fg:red)[\uea7a SSH ](bg:red fg:white bold)[\ue0c4](bg:blue fg:red)"
 shell = ["bash", "--noprofile", "--norc"]
 
