@@ -17,7 +17,7 @@ This is a **bare git repository** with `$HOME` as work-tree.
 
 Format: `type(scope): message`
 
-- Scopes: `bash`, `nvim`, `starship`
+- Scopes: `bash`, `nvim`, `starship`, `tmux`
 - Types: `feat`, `fix`, `chore`, `refactor`, `docs`
 - GPG signing is enabled globally
 
@@ -27,6 +27,7 @@ Format: `type(scope): message`
 ~/.bashrc.d/              # Modular bash config
 ~/.config/nvim/           # Neovim Lua config
 ~/.config/starship.toml   # Starship prompt
+~/.config/tmux/           # tmux config (theme.conf is a hyprdsktp symlink, untracked)
 ~/.gitignore              # Repo gitignore (ignore-all strategy)
 ~/README.md               # Repo documentation
 ~/install.sh              # Setup script
