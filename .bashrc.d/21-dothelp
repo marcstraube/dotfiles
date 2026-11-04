@@ -40,6 +40,7 @@ dothelp() {
         _dothelp_item "modern" "Modern CLI replacements (eza, bat, etc.)"
         _dothelp_item "banner" "Terminal banner configuration"
         _dothelp_item "keys" "Keyboard shortcuts (ble.sh, vi-mode, fzf)"
+        _dothelp_item "tmux" "tmux sessions (auto-attach on SSH, ta)"
         _dothelp_item "options" "Shell options & history settings"
         echo ""
         printf "  Source: ${yellow}~/.bashrc.d/${reset}\n"
@@ -291,6 +292,21 @@ dothelp() {
         _dothelp_item "Alt+C" "Fuzzy cd into directory"
     }
 
+    _dothelp_tmux() {
+        _dothelp_header "tmux"
+        _dothelp_section "Sessions"
+        _dothelp_item "ta" "Attach last session (or new 'main')"
+        _dothelp_item "ta <name>" "Attach/create named session (switch inside tmux)"
+        _dothelp_item "SSH login" "Auto-attach via exec (detach = logout)"
+        _dothelp_item "NO_TMUX=1" "Skip: ssh -t host 'NO_TMUX=1 exec bash -i'"
+        _dothelp_section "Keys (prefix = Ctrl+B)"
+        _dothelp_item "prefix d" "Detach"
+        _dothelp_item "prefix s" "Session tree"
+        _dothelp_item "prefix c / \" / %" "New window / split (keeps cwd)"
+        _dothelp_item "prefix [" "Copy mode (vi: v select, y yank)"
+        _dothelp_item "prefix r" "Reload tmux.conf"
+    }
+
     local output
     case "${1:-}" in
         nav)        output=$(_dothelp_nav) ;;
@@ -304,6 +320,7 @@ dothelp() {
         banner)     output=$(_dothelp_banner) ;;
         options)    output=$(_dothelp_options) ;;
         keys)       output=$(_dothelp_keys) ;;
+        tmux)       output=$(_dothelp_tmux) ;;
         "")         output=$(_dothelp_overview) ;;
         *)
             printf "Unknown category: ${bold}%s${reset}\n" "$1"
@@ -311,7 +328,7 @@ dothelp() {
             unset -f _dothelp_header _dothelp_item _dothelp_section _dothelp_overview \
                      _dothelp_nav _dothelp_files _dothelp_git _dothelp_search \
                      _dothelp_system _dothelp_editor _dothelp_functions _dothelp_modern \
-                     _dothelp_banner _dothelp_options _dothelp_keys
+                     _dothelp_banner _dothelp_options _dothelp_keys _dothelp_tmux
             return 1
             ;;
     esac

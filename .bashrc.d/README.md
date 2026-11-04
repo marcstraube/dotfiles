@@ -8,6 +8,7 @@ Files are loaded in numerical order:
 
 ```
 ~/.bashrc.d/
+├── 00-tmux             # tmux auto-attach on SSH, ta helper
 ├── 01-environment      # Environment variables, PATH, XDG dirs
 ├── 02-history          # History configuration (eternal, sync)
 ├── 03-options          # Shell options (vi mode, globbing, etc.)
