@@ -18,4 +18,5 @@ DOTFILES_DEPS=(
     "sops:sops"
     "direnv:direnv"
     "atuin:atuin"
+    "jq:jq"
 )

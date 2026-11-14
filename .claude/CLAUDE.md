@@ -17,7 +17,7 @@ This is a **bare git repository** with `$HOME` as work-tree.
 
 Format: `type(scope): message`
 
-- Scopes: `bash`, `nvim`, `starship`, `tmux`
+- Scopes: `bash`, `claude`, `nvim`, `starship`, `tmux`
 - Types: `feat`, `fix`, `chore`, `refactor`, `docs`
 - GPG signing is enabled globally
 
@@ -25,6 +25,9 @@ Format: `type(scope): message`
 
 ```
 ~/.bashrc.d/              # Modular bash config
+~/.claude/settings.json   # Claude Code settings (status line, hooks, plugins)
+~/.claude/statusline.sh   # Claude Code status line
+~/.claude/hooks/          # Claude Code hooks (tmux window state)
 ~/.config/nvim/           # Neovim Lua config
 ~/.config/starship.toml   # Starship prompt
 ~/.config/tmux/           # tmux config (theme.conf is a hyprdsktp symlink, untracked)
